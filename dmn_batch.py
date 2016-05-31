@@ -64,13 +64,13 @@ class DMN_batch:
         self.W_inp_hid_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
         self.b_inp_hid = nn_utils.constant_param(value=0.0, shape=(self.dim,))
         
-        input_var_shuffled = self.input_var.dimshuffle(1, 2, 0)
+        input_var_shuffled = self.input_var.dimshuffle(1, 2, 0) # (seq_len, glove_dim, batch_size)
         inp_dummy = theano.shared(np.zeros((self.dim, self.batch_size), dtype=floatX))
         inp_c_history, _ = theano.scan(fn=self.input_gru_step, 
                             sequences=input_var_shuffled,
                             outputs_info=T.zeros_like(inp_dummy))
         
-        inp_c_history_shuffled = inp_c_history.dimshuffle(2, 0, 1)
+        inp_c_history_shuffled = inp_c_history.dimshuffle(2, 0, 1) # (batch_size, seq_len, dim)
         
         inp_c_list = []
         inp_c_mask_list = []
@@ -79,15 +79,15 @@ class DMN_batch:
             inp_c_list.append(T.concatenate([taken, T.zeros((self.input_mask_var.shape[1] - taken.shape[0], self.dim), floatX)]))
             inp_c_mask_list.append(T.concatenate([T.ones((taken.shape[0],), np.int32), T.zeros((self.input_mask_var.shape[1] - taken.shape[0],), np.int32)]))
         
-        self.inp_c = T.stack(inp_c_list).dimshuffle(1, 2, 0)
-        inp_c_mask = T.stack(inp_c_mask_list).dimshuffle(1, 0)
+        self.inp_c = T.stack(inp_c_list).dimshuffle(1, 2, 0) # (fact_cnt, dim, batch_size)
+        inp_c_mask = T.stack(inp_c_mask_list).dimshuffle(1, 0) # (fact_cnt, batch_size)
         
-        q_var_shuffled = self.q_var.dimshuffle(1, 2, 0)
+        q_var_shuffled = self.q_var.dimshuffle(1, 2, 0) # (q_len, glove_dim, batch_size)
         q_dummy = theano.shared(np.zeros((self.dim, self.batch_size), dtype=floatX))
         q_q_history, _ = theano.scan(fn=self.input_gru_step, 
                             sequences=q_var_shuffled,
                             outputs_info=T.zeros_like(q_dummy))
-        self.q_q = q_q_history[-1]
+        self.q_q = q_q_history[-1] # (dim, batch_size)
         
         
         print "==> creating parameters for memory module"
@@ -113,13 +113,13 @@ class DMN_batch:
         print "==> building episodic memory module (fixed number of steps: %d)" % self.memory_hops
         memory = [self.q_q.copy()]
         for iter in range(1, self.memory_hops + 1):
-            current_episode = self.new_episode(memory[iter - 1])
+            current_episode = self.new_episode(memory[iter - 1]) #(dim, batch_size)
             memory.append(self.GRU_update(memory[iter - 1], current_episode,
                                           self.W_mem_res_in, self.W_mem_res_hid, self.b_mem_res, 
                                           self.W_mem_upd_in, self.W_mem_upd_hid, self.b_mem_upd,
                                           self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid))                         
         
-        last_mem_raw = memory[-1].dimshuffle((1, 0))
+        last_mem_raw = memory[-1].dimshuffle((1, 0)) # (batch_size,dim)
         
         net = layers.InputLayer(shape=(self.batch_size, self.dim), input_var=last_mem_raw)
         if self.batch_norm:

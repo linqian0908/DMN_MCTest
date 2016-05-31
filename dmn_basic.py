@@ -40,7 +40,7 @@ class DMN_basic:
         self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
         self.vocab_size = len(self.vocab)
 
-        self.input_var = T.matrix('input_var')
+        self.input_var = T.matrix('input_var') #(seq_len, glove_dim)
         self.q_var = T.matrix('question_var')
         self.answer_var = T.iscalar('answer_var')
         self.input_mask_var = T.ivector('input_mask_var')
@@ -65,6 +65,7 @@ class DMN_basic:
         
         self.inp_c = inp_c_history.take(self.input_mask_var, axis=0)
         
+        # so question and input module share the same GRU?
         self.q_q, _ = theano.scan(fn=self.input_gru_step, 
                     sequences=self.q_var,
                     outputs_info=T.zeros_like(self.b_inp_hid))
@@ -237,7 +238,7 @@ class DMN_basic:
         g, g_updates = theano.scan(fn=self.new_attention_step,
             sequences=self.inp_c,
             non_sequences=[mem, self.q_q],
-            outputs_info=T.zeros_like(self.inp_c[0][0])) 
+            outputs_info=T.zeros_like(self.inp_c[0][0])) # a for loop over memory C
         
         if (self.normalize_attention):
             g = nn_utils.softmax(g)
@@ -311,7 +312,7 @@ class DMN_basic:
                 input_masks.append(np.array([index for index, w in enumerate(inp) if w == '.'], dtype=np.int32)) 
             else:
                 raise Exception("invalid input_mask_mode")
-        
+        `   # mask for fact representation ct, either use words in single sentence, or end-of-sentence states for multi-sentence
         return inputs, questions, answers, input_masks
 
     

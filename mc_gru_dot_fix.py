@@ -107,6 +107,8 @@ class DMN:
             net = layers.DropoutLayer(net, p=self.dropout)
         last_mem = layers.get_output(net)[0]
         
+        self.attentions = T.stack(self.attentions)
+        
         print "==> building options module"
         self.c_vecs = []
         for choice in [self.ca_var, self.cb_var, self.cc_var, self.cd_var]:
@@ -148,7 +150,6 @@ class DMN:
                                             allow_input_downcast = True,
                                             outputs=[self.prediction, self.loss],
                                             updates=updates)
-            self.attentions = T.stack(self.attentions)
             
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
@@ -363,3 +364,15 @@ class DMN:
                 "skipped": skipped,
                 "log": "pn: %.3f \t gn: %.3f" % (param_norm, grad_norm)
                 }
+    
+    def predict(self, data):
+        inputs, questions, answers, choices, input_masks = self._process_input(data)
+        probabilities, loss, attentions = self.test_fn(inputs[0], questions[0], answers[0], 
+                                            choices[0][0], choices[0][1], choices[0][2], choices[0][3], input_masks[0])
+        a = probabilities.argmax()
+        if a==answers[0]:
+            print "Correct!"
+        else:
+            print "Wrong :("
+        print "==> predicting: {}".format(a)
+        return probabilities, attentions

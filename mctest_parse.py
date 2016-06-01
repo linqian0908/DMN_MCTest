@@ -137,20 +137,20 @@ def parse_mc(questions_file, answers_file, vocab={}):
     return {'idata':tasks_id, 'wdata':tasks_w, 'vocab':vocab}
 
 def print_words(task):
-    print "Story..."
+    print "...Story..."
     story = task["C"];
     for i in xrange(len(story)):
         print ' '.join(story[i])
     
-    print "Question..."
+    print "...Question..."
     print ' '.join(task["Q"])
     
-    print "Options..."
+    print "...Options..."
     options = task["O"]
     for i in xrange(len(options)):
         print ' '.join(options[i])
     
-    print "Correct answer..."
+    print "...Correct answer..."
     print task["A"]
 
 def print_indices(task):
@@ -184,7 +184,7 @@ def build_mc(id):
     dev_obj = parse_mc(os.path.join(data_dir, dev_file),os.path.join(data_dir, dev_answers),vocab = train_obj['vocab'])  
     test_obj = parse_mc(os.path.join(data_dir, test_file), os.path.join(data_dir, test_answers), vocab = dev_obj['vocab'])
     
-    return train_obj['idata'], dev_obj['idata'], test_obj['idata'], test_obj['vocab']
+    return train_obj['idata'], dev_obj['idata'], test_obj['idata'], train_obj['wdata'], dev_obj['wdata'], test_obj['wdata'], test_obj['vocab']
     
 #Given a word-to-id dictionary, return embedding initialized to Glove. word not found in Glove will be initialized to 0
 def build_embedding(word_to_id, vocab_dim):

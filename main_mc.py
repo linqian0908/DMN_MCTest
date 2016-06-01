@@ -27,7 +27,7 @@ parser.add_argument('--id', type=str, default="mc160", help='MCTest task ID')
 parser.add_argument('--l2', type=float, default=0.001, help='L2 regularization')
 parser.add_argument('--normalize_attention', type=bool, default=False, help='flag for enabling softmax on attention vector')
 parser.add_argument('--log_every', type=int, default=500, help='print information every x iteration')
-parser.add_argument('--save_every', type=int, default=5, help='save state every x epoch')
+parser.add_argument('--save_every', type=int, default=1, help='save state every x epoch')
 parser.add_argument('--prefix', type=str, default="", help='optional prefix of network name')
 parser.add_argument('--dropout', type=float, default=0, help='dropout rate (between 0 and 1)')
 parser.add_argument('--batch_norm', type=bool, default=False, help='batch normalization')
@@ -49,7 +49,7 @@ network_name = args.prefix + '%s.mh%d.n%d.bs%d%s%s%s.%s' % (
     (".d" + str(args.dropout)) if args.dropout>0 else "",
     args.id)
 
-train_raw, dev_raw, test_raw, vocab = mctest_parse.build_mc(args.id)
+train_raw, dev_raw, test_raw, _, _, _, vocab = mctest_parse.build_mc(args.id)
 if args.load_embed: # read preprossed data and embedding matrix
     word2vec = mctest_parse.read_embedding(args.id,args.word_vector_size)
 else:
@@ -126,7 +126,7 @@ def do_epoch(mode, epoch, skipped=0):
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
     cfs = metrics.confusion_matrix(y_true, y_pred)
-    print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(ctf[3])+"]"
+    print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(cfs[3])+"]"
     
     return avg_loss, skipped
 

@@ -19,7 +19,8 @@ class DMN_qa:
     def __init__(self, train_raw, dev_raw, test_raw, word2vec, word_vector_size, 
                 dim, mode, input_mask_mode, memory_hops, l2, normalize_attention, **kwargs):
                 
-        print "==> not used params in DMN class:", kwargs.keys()        
+        print "==> not used params in DMN class:", kwargs.keys()
+        self.word2vec = word2vec      
         self.word_vector_size = word_vector_size
         self.dim = dim
         self.mode = mode
@@ -44,7 +45,7 @@ class DMN_qa:
         self.input_mask_var = T.ivector('input_mask_var')
         
         print "==> embedding layer"
-        self.embed = theano.shared(word2vec)
+        self.embed = theano.shared(self.word2vec)
         inp_mat = self.embed[self.inp_var]
         q_mat = self.embed[self.q_var]
         ca_mat = self.embed[self.ca_var]
@@ -153,23 +154,27 @@ class DMN_qa:
             print "==> compiling train_fn"
             self.train_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
                                                     self.ca_var, self.cb_var, self.cc_var, self.cd_var,
-                                                    self.input_mask_var], 
+                                                    self.input_mask_var],
+                                            allow_input_downcast = True,
                                             outputs=[self.prediction, self.loss],
                                             updates=updates)
         
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
-                                                    self.ca_var, self.cb_var, self.cc_var, self.cd_var,
-                                                    self.input_mask_var], 
-                                        outputs=[self.prediction, self.loss, self.inp_c, self.q_q, last_mem])
+                                               self.ca_var, self.cb_var, self.cc_var, self.cd_var,
+                                               self.input_mask_var],
+                                       allow_input_downcast = True,
+                                       outputs=[self.prediction, self.loss, self.inp_c, self.q_q, last_mem])
         
         
         if self.mode == 'train':
             print "==> computing gradients (for debugging)"
             gradient = T.grad(self.loss, self.params)
             self.get_gradient_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
-                                                    self.ca_var, self.cb_var, self.cc_var, self.cd_var,
-                                                    self.input_mask_var], outputs=gradient)
+                                                           self.ca_var, self.cb_var, self.cc_var, self.cd_var,
+                                                           self.input_mask_var],
+                                                   allow_input_downcast = True,
+                                                   outputs=gradient)
     
     
     def GRU_update(self, h, x, W_res_in, W_res_hid, b_res,
@@ -295,22 +300,30 @@ class DMN_qa:
         choices = []
         answers = []
         input_masks = []
+        maxst = 0
+        maxq = 0
+        maxTc = 0
         for x in data_raw:
-            inputs.append([w for s in x["C"] for w in s])
-            questions.append(x["Q"])
+            inputs.append(np.array([w for s in x["C"] for w in s],dtype=np.int32))
+            maxst  =max(maxst,len(inputs[-1]))
+            questions.append(np.array(x["Q"],dtype=np.int32))
+            maxq = max(maxq,len(questions[-1]))                
             answers.append(x["A"])
-            choices.append(x["O"])
+            choices.append([np.array(opt,dtype=np.int32) for opt in x["O"]])
             
             if self.input_mask_mode == 'word':
                 input_masks.append(np.array(xrange(len(inp_vector)), dtype=np.int32)) 
             elif self.input_mask_mode == 'sentence':
-                sentence_length = np.array([len(s) for s in x["C"]],dtype=np.int32)                
-                input_masks.append(np.cumsum(sentence_length)-1) 
+                sentence_length = np.array([len(s) for s in x["C"]], dtype=np.int32)
+                input_masks.append(np.cumsum(sentence_length,dtype=np.int32)-1) 
             else:
                 raise Exception("invalid input_mask_mode")
-        
+            maxTc = max(maxTc,len(input_masks[-1]))
+            
+        print("max statement length is {}".format(maxst))
+        print("max question length is {}".format(maxq))
+        print("max Tc length is {}".format(maxTc))
         return inputs, questions, answers, choices, input_masks
-
     
     def get_batches_per_epoch(self, mode):
         if (mode == 'train'):

@@ -190,7 +190,7 @@ def build_mc(id):
 def build_embedding(word_to_id, vocab_dim):
     vector_file = "data/glove/glove.6B." + str(vocab_dim) + "d.txt"
     n_words = len(word_to_id)
-    embedding_weights = np.zeros((n_words, vocab_dim))
+    embedding_weights = np.zeros((n_words, vocab_dim),dtype=np.float32)
     print 'Loading glove... total words: {}'.format(n_words)
     found_word = 0
     with codecs.open(vector_file, 'r', 'utf-8') as f:
@@ -202,20 +202,12 @@ def build_embedding(word_to_id, vocab_dim):
     print 'Words loaded from glove: {}'.format(found_word)
     return embedding_weights
 
-def read_mc(id):
-    data_dir = 'data/MCTest'
-    print("Loading pickled data")
-    f = file(os.path.join(data_dir, id+'.pickle'), 'rb')
-    obj = cPickle.load(f)
-    train, dev, test, _ = obj
-    return train, dev, test
-
 def read_embedding(id,dim):
     data_dir = 'data/MCTest'
     print("Loading pickled embedding")
     f = file(os.path.join(data_dir, id+'.'+str(dim)+'d.pickle'), 'rb')
     embed = cPickle.load(f)
-    return embed
+    return np.array(embed,dtype=np.float32)
      
 if __name__ == "__main__":    
     data_dir = "data/MCTest"
@@ -239,30 +231,17 @@ if __name__ == "__main__":
     print("Train data {}".format(n))
     print_words(train_obj['wdata'][n])
     
-    # Pickle!!!!   
-    out_obj={'train':train_obj['idata'], 'dev':dev_obj['idata'], 'test':test_obj['idata'], 'vocab':test_obj['vocab']}
-    out_pickle = dataset+'.pickle'
-    print("Pickling data... " + out_pickle)
-    f = file(os.path.join(data_dir, out_pickle), 'wb')
-    cPickle.dump(out_obj, f, protocol=cPickle.HIGHEST_PROTOCOL)
-    f.close()
-    
+    # Pickle!!!!
     print "Process embedding"
-    embed = build_embedding(out_obj['vocab'], vocab_dim)
+    embed = build_embedding(test_obj['vocab'], vocab_dim)
+    
     embed_pickle = dataset+'.'+str(vocab_dim)+'d.pickle'
     print("Pickling embedding... " + embed_pickle)
     f = file(os.path.join(data_dir, embed_pickle), 'wb')
     cPickle.dump(embed, f, protocol=cPickle.HIGHEST_PROTOCOL)
     f.close()
-    
-    print "Reading data"
-    train_raw, dev_raw, test_raw = read_mc(dataset)
-    # examine data
-    n = random.randint(0,len(train_raw)-1)
-    print("Train data {}".format(n))
-    print_indices(train_raw[n])
         
     print "Reading embedding"
     word2vec = read_embedding(dataset,vocab_dim)
-    print(word2vec.size())
-    
+    print(word2vec.shape)
+    print(word2vec[0])

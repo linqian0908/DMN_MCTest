@@ -23,8 +23,7 @@ def init_babi(fname):
             tasks.append(task.copy())
 
     return tasks
-
-
+    
 def get_babi_raw(id, test_id):
     babi_map = {
         "1": "qa1_single-supporting-fact",
@@ -47,7 +46,6 @@ def get_babi_raw(id, test_id):
         "18": "qa18_size-reasoning",
         "19": "qa19_path-finding",
         "20": "qa20_agents-motivations",
-        "MCTest": "MCTest",
         "19changed": "19changed",
         "joint": "all_shuffled", 
         "sh1": "../shuffled/qa1_single-supporting-fact",
@@ -92,7 +90,6 @@ def load_glove(dim):
     print "==> glove is loaded"
     
     return word2vec
-
 
 def create_vector(word, word2vec, word_vector_size, silent=False):
     # if the word is missing from Glove, create some fake vector and store in glove!

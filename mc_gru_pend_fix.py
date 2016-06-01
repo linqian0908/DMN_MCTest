@@ -14,16 +14,13 @@ import nn_utils
 
 floatX = theano.config.floatX
 
-class DMN_qa:
+class DMN:
     
-    def __init__(self, babi_train_raw, babi_test_raw, word2vec, word_vector_size, 
-                dim, mode, input_mask_mode, memory_hops, l2, normalize_attention, **kwargs):
-
+    def __init__(self, train_raw, dev_raw, test_raw, word2vec, word_vector_size, 
+                dim, mode, input_mask_mode, memory_hops, l2, lr, normalize_attention, dropout, **kwargs):
+        print "==> model: GRU, pending options, fixed embedding"
         print "==> not used params in DMN class:", kwargs.keys()
-        self.vocab = {}
-        self.ivocab = {}
-        
-        self.word2vec = word2vec
+        self.word2vec = word2vec      
         self.word_vector_size = word_vector_size
         self.dim = dim
         self.mode = mode
@@ -31,10 +28,13 @@ class DMN_qa:
         self.memory_hops = memory_hops
         #self.batch_size = 1
         self.l2 = l2
+        self.lr = lr
         self.normalize_attention = normalize_attention
-
-        self.train_input, self.train_q, self.train_answer, self.train_choices, self.train_input_mask = self._process_input(babi_train_raw)
-        self.test_input, self.test_q, self.test_answer, self.test_choices, self.test_input_mask = self._process_input(babi_test_raw)
+        self.dropout = dropout
+        
+        self.train_input, self.train_q, self.train_answer, self.train_choices, self.train_input_mask = self._process_input(train_raw)
+        self.dev_input, self.dev_q, self.dev_answer, self.dev_choices, self.dev_input_mask = self._process_input(dev_raw)
+        self.test_input, self.test_q, self.test_answer, self.test_choices, self.test_input_mask = self._process_input(test_raw)
         self.vocab_size = 4 # number of answer choices
         
         self.inp_var = T.matrix('input_var')
@@ -45,7 +45,6 @@ class DMN_qa:
         self.cd_var = T.matrix('cd_var')
         self.ans_var = T.iscalar('answer_var')
         self.input_mask_var = T.ivector('input_mask_var')
-        
         
         print "==> building input module"
         self.W_inp_res_in = theano.shared(lasagne.init.Normal(0.1).sample((self.dim, self.word_vector_size)), borrow=True)
@@ -114,15 +113,18 @@ class DMN_qa:
                                           self.W_mem_upd_in, self.W_mem_upd_hid, self.b_mem_upd,
                                           self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid))
                                       
-        last_mem = memory[-1].flatten() # (dim*4)
-        
+        last_mem_raw = memory[-1].flatten().dimshuffle('x', 0) # (dim*4)
+        net = layers.InputLayer(shape=(1, 4 * self.dim), input_var=last_mem_raw)
+        if self.dropout > 0 and self.mode == 'train':
+            net = layers.DropoutLayer(net, p=self.dropout)
+        last_mem = layers.get_output(net)[0]
 
         print "==> building answer module"
         self.W_a = theano.shared(lasagne.init.Normal(0.1).sample((self.vocab_size, 4 * self.dim)), borrow=True)
         self.prediction = nn_utils.softmax(T.dot(self.W_a, last_mem))
         
         
-        print "==> collecting all parameters"
+        print "==> collecting all parameters" # embedding matrix is not trained
         self.params = [self.W_inp_res_in, self.W_inp_res_hid, self.b_inp_res, 
                   self.W_inp_upd_in, self.W_inp_upd_hid, self.b_inp_upd,
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid,
@@ -141,29 +143,33 @@ class DMN_qa:
         
         self.loss = self.loss_ce + self.loss_l2
         
-        updates = lasagne.updates.adadelta(self.loss, self.params)
+        updates = lasagne.updates.adadelta(self.loss, self.params, learning_rate=self.lr)
         
         if self.mode == 'train':
             print "==> compiling train_fn"
             self.train_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
                                                     self.ca_var, self.cb_var, self.cc_var, self.cd_var,
-                                                    self.input_mask_var], 
+                                                    self.input_mask_var],
+                                            allow_input_downcast = True,
                                             outputs=[self.prediction, self.loss],
                                             updates=updates)
         
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
-                                                    self.ca_var, self.cb_var, self.cc_var, self.cd_var,
-                                                    self.input_mask_var], 
-                                        outputs=[self.prediction, self.loss, self.inp_c, self.q_q, last_mem])
+                                               self.ca_var, self.cb_var, self.cc_var, self.cd_var,
+                                               self.input_mask_var],
+                                       allow_input_downcast = True,
+                                       outputs=[self.prediction, self.loss, self.inp_c, self.q_q, last_mem])
         
         
         if self.mode == 'train':
             print "==> computing gradients (for debugging)"
             gradient = T.grad(self.loss, self.params)
             self.get_gradient_fn = theano.function(inputs=[self.inp_var, self.q_var, self.ans_var,
-                                                    self.ca_var, self.cb_var, self.cc_var, self.cd_var,
-                                                    self.input_mask_var], outputs=gradient)
+                                                           self.ca_var, self.cb_var, self.cc_var, self.cd_var,
+                                                           self.input_mask_var],
+                                                   allow_input_downcast = True,
+                                                   outputs=gradient)
     
     
     def GRU_update(self, h, x, W_res_in, W_res_hid, b_res,
@@ -282,83 +288,42 @@ class DMN_qa:
                 return i
         return -1
         
-    
     def _process_input(self, data_raw):
         inputs = []
         questions = []
         choices = []
         answers = []
         input_masks = []
+        maxst = 0
+        maxq = 0
+        maxTc = 0
         for x in data_raw:
-            inp = x["C"].lower().split(' ') 
-            inp = [w for w in inp if len(w) > 0]
-
-            q = x["Q"].lower().split(' ')
-            q = [w for w in q if len(w) > 0]
+            inputs.append(np.vstack([self.word2vec[w] for s in x["C"] for w in s]).astype(floatX)) #(seq_len, embed)
+            maxst  =max(maxst,len(inputs[-1]))
+            questions.append(np.vstack([self.word2vec[w] for w in x["Q"]]).astype(floatX))
+            maxq = max(maxq,len(questions[-1]))                
+            answers.append(x["A"])
+            choices.append([np.vstack([self.word2vec[w] for w in opt]).astype(floatX) for opt in x["O"]])
             
-            pa = self._find_first(inp, 'a>')
-            pb = self._find_first(inp, 'b>')
-            pc = self._find_first(inp, 'c>')
-            pd = self._find_first(inp, 'd>')
-            
-            assert (pa != -1 and pb != -1 and pc != -1 and pd != -1
-                    and pa < pb and pb < pc and pc < pd)
-            
-            ca = inp[pa+1:pb]
-            cb = inp[pb+1:pc]
-            cc = inp[pc+1:pd]
-            cd = inp[pd+1:]
-            ca = ca[:self._find_first(ca, '.')+1]
-            cb = cb[:self._find_first(cb, '.')+1]
-            cc = cc[:self._find_first(cc, '.')+1]
-            cd = cd[:self._find_first(cd, '.')+1]
-
-            inp = inp[:pa]
-
-            inp_vector = [utils.process_word(word = w, 
-                                        word2vec = self.word2vec, 
-                                        vocab = self.vocab, 
-                                        ivocab = self.ivocab, 
-                                        word_vector_size = self.word_vector_size, 
-                                        to_return = "word2vec",
-                                        silent = True) for w in inp]
-                                        
-            q_vector = [utils.process_word(word = w, 
-                                        word2vec = self.word2vec, 
-                                        vocab = self.vocab, 
-                                        ivocab = self.ivocab, 
-                                        word_vector_size = self.word_vector_size, 
-                                        to_return = "word2vec",
-                                        silent = True) for w in q]
-
-            choice_vectors = [np.array([utils.process_word(word = w, 
-                                        word2vec = self.word2vec, 
-                                        vocab = self.vocab, 
-                                        ivocab = self.ivocab, 
-                                        word_vector_size = self.word_vector_size, 
-                                        to_return = "word2vec",
-                                        silent = True) for w in choice], dtype=floatX)
-                                                            for choice in [ca, cb, cc, cd]]
-            
-            inputs.append(np.vstack(inp_vector).astype(floatX))
-            questions.append(np.vstack(q_vector).astype(floatX))
-            answers.append(ord(x['A'][0]) - ord('A'))
-            choices.append(choice_vectors)
-            
-            # TODO: here we assume the answer is one word! 
             if self.input_mask_mode == 'word':
-                input_masks.append(np.array([index for index, w in enumerate(inp)], dtype=np.int32)) 
-            elif self.input_mask_mode == 'sentence': 
-                input_masks.append(np.array([index for index, w in enumerate(inp) if w == '.'], dtype=np.int32)) 
+                input_masks.append(np.array(xrange(len(inp_vector)), dtype=np.int32)) 
+            elif self.input_mask_mode == 'sentence':
+                sentence_length = np.array([len(s) for s in x["C"]], dtype=np.int32)
+                input_masks.append(np.cumsum(sentence_length,dtype=np.int32)-1) 
             else:
                 raise Exception("invalid input_mask_mode")
-        
+            maxTc = max(maxTc,len(input_masks[-1]))
+            
+        print("max statement length is {}".format(maxst))
+        print("max question length is {}".format(maxq))
+        print("max Tc length is {}".format(maxTc))
         return inputs, questions, answers, choices, input_masks
-
     
     def get_batches_per_epoch(self, mode):
         if (mode == 'train'):
             return len(self.train_input)
+        elif (mode == 'dev'):
+            return len(self.dev_input)
         elif (mode == 'test'):
             return len(self.test_input)
         raise Exception("unknown mode")
@@ -373,31 +338,32 @@ class DMN_qa:
             inputs = self.train_input
             qs = self.train_q
             answers = self.train_answer
-            ca = self.train_choices
-            cb = self.train_choices
-            cc = self.train_choices
-            cd = self.train_choices
+            choices = self.train_choices
             input_masks = self.train_input_mask
         elif mode == "test":    
             theano_fn = self.test_fn 
             inputs = self.test_input
             qs = self.test_q
             answers = self.test_answer
-            ca = self.test_choices
-            cb = self.test_choices
-            cc = self.test_choices
-            cd = self.test_choices
+            choices = self.test_choices
             input_masks = self.test_input_mask
+        elif mode == "dev":    
+            theano_fn = self.test_fn 
+            inputs = self.dev_input
+            qs = self.dev_q
+            answers = self.dev_answer
+            choices = self.dev_choices
+            input_masks = self.dev_input_mask
         else:
             raise Exception("Invalid mode")
             
         inp = inputs[batch_index]
         q = qs[batch_index]
         ans = answers[batch_index]
-        ca = ca[batch_index][0]
-        cb = cb[batch_index][1]
-        cc = cc[batch_index][2]
-        cd = cd[batch_index][3]
+        ca = choices[batch_index][0]
+        cb = choices[batch_index][1]
+        cc = choices[batch_index][2]
+        cd = choices[batch_index][3]
         input_mask = input_masks[batch_index]
 
         skipped = 0

@@ -13,7 +13,7 @@ import cPickle
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="dmn_qa_mc", help='network type: dmn_qa_mc or dmn_qa_batch')
+parser.add_argument('--network', type=str, default="gru_dot", help='network type: gru_pend, gru_dot, gru_pend_fix')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs')
@@ -26,12 +26,13 @@ parser.add_argument('--batch_size', type=int, default=10, help='no commment')
 parser.add_argument('--id', type=str, default="mc160", help='MCTest task ID')
 parser.add_argument('--l2', type=float, default=0.001, help='L2 regularization')
 parser.add_argument('--normalize_attention', type=bool, default=False, help='flag for enabling softmax on attention vector')
-parser.add_argument('--log_every', type=int, default=50, help='print information every x iteration')
-parser.add_argument('--save_every', type=int, default=1, help='save state every x epoch')
+parser.add_argument('--log_every', type=int, default=500, help='print information every x iteration')
+parser.add_argument('--save_every', type=int, default=5, help='save state every x epoch')
 parser.add_argument('--prefix', type=str, default="", help='optional prefix of network name')
-parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate (between 0 and 1)')
+parser.add_argument('--dropout', type=float, default=0, help='dropout rate (between 0 and 1)')
 parser.add_argument('--batch_norm', type=bool, default=False, help='batch normalization')
 parser.add_argument('--load_embed', type=bool, default=True, help='whether to load per-processed data and wor2vec')
+parser.add_argument('--lr', type=float, default=1.0, help='Learning rate')
 args = parser.parse_args()
 
 print args
@@ -48,7 +49,6 @@ network_name = args.prefix + '%s.mh%d.n%d.bs%d%s%s%s.%s' % (
     (".d" + str(args.dropout)) if args.dropout>0 else "",
     args.id)
 
-
 train_raw, dev_raw, test_raw, vocab = mctest_parse.build_mc(args.id)
 if args.load_embed: # read preprossed data and embedding matrix
     word2vec = mctest_parse.read_embedding(args.id,args.word_vector_size)
@@ -62,20 +62,21 @@ args_dict['test_raw'] = test_raw
 args_dict['word2vec'] = word2vec
 
 # init class
-if args.network == 'dmn_qa_batch':
-    import dmn_qa_batch
-    dmn = dmn_batch.DMN_batch(**args_dict)
-
-elif args.network == 'dmn_qa_mc':
-    import dmn_qa_mc
-    if (args.batch_size != 1):
-        print "==> no minibatch training, argument batch_size is useless"
-        args.batch_size = 1
-    dmn = dmn_qa_mc.DMN_qa(**args_dict)
-
+if args.network == 'gru_pend':
+    from mc_gru_pend import DMN
+elif args.network == 'gru_dot':
+    from mc_gru_dot import DMN
+elif args.network == 'gru_pend_fix':
+    from mc_gru_pend_fix import DMN
+elif args.network == 'gru_dot_fix':
+    from mc_gru_dot_fix import DMN
 else: 
     raise Exception("No such network known: " + args.network)
     
+if (args.batch_size != 1):
+        print "==> no minibatch training, argument batch_size is useless"
+        args.batch_size = 1
+dmn = DMN(**args_dict)
 
 if args.load_state != "":
     dmn.load_state(args.load_state)
@@ -109,7 +110,7 @@ def do_epoch(mode, epoch, skipped=0):
                 y_pred.append(x)
             
             # TODO: save the state sometimes
-            if (i % args.log_every == 0):
+            if (i % args.log_every == (args.log_every-1)):
                 cur_time = time.time()
                 print ("  %sing: %d.%d / %d \t loss: %.3f \t avg_loss: %.3f \t skipped: %d \t %s \t time: %.2fs" % 
                     (mode, epoch, i * args.batch_size, batches_per_epoch * args.batch_size, 
@@ -121,34 +122,30 @@ def do_epoch(mode, epoch, skipped=0):
             exit()
 
     avg_loss /= batches_per_epoch
-    print "\n  %s loss = %.5f" % (mode, avg_loss)
-    print "confusion matrix:"
-    print metrics.confusion_matrix(y_true, y_pred)
-    
+    print "\n%s loss = %.5f" % (mode, avg_loss)    
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
+    cfs = metrics.confusion_matrix(y_true, y_pred)
+    print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(ctf[3])+"]"
     
     return avg_loss, skipped
-
 
 if args.mode == 'train':
     print "==> training"   	
     skipped = 0
     for epoch in range(args.epochs):
-        start_time = time.time()
-        
-        _, skipped = do_epoch('train', epoch, skipped)
-        
-        epoch_loss, skipped = do_epoch('test', epoch, skipped)
-        
+        start_time = time.time()        
+        _, skipped = do_epoch('train', epoch, skipped)        
+        epoch_loss, skipped = do_epoch('dev', epoch, skipped)        
         state_name = 'states/%s.epoch%d.test%.5f.state' % (network_name, epoch, epoch_loss)
-
+        
         if (epoch % args.save_every == 0):    
             print "==> saving ... %s" % state_name
-            dmn.save_params(state_name, epoch)
-        
+            dmn.save_params(state_name, epoch)        
         print "epoch %d took %.3fs" % (epoch, float(time.time()) - start_time)
-
+    
+    epoch_loss, skipped = do_epoch('test', epoch, skipped)
+    
 elif args.mode == 'test':
     file = open('last_tested_model.json', 'w+')
     data = dict(args._get_kwargs())

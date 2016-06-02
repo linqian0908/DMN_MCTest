@@ -68,7 +68,7 @@ view_babi and view_mc can visualize attention gate over episode. Need to load fr
 
     python view_babi.py --network dmn_smooth --babi_id 2 --load_state states/dmn_smooth.mh3.n40.bs10.babi2.epoch29.test6.43988.state
     
-    python view_mc.py --network mc_gru_dot_fix --id mc160 --load_state states/gru_dot_fix.mh3.n40.bs10.d0.3.mc160.epoch25.test5.22941.state
+    python view_mc.py --network gru_dot_fix --id mc160 --load_state states/gru_dot_fix.mh3.n40.bs10.d0.3.mc160.epoch25.test5.22941.state
     
 ## Roadmap
 

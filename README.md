@@ -1,15 +1,9 @@
 # Dynamic memory networks in Theano
 The aim of this repository is to implement Dynamic memory networks 
 as described in the [paper by Kumar et al.](http://arxiv.org/abs/1506.07285)
-and to experiment with its various extensions.
+and to extend it to mctest. DMN implementation for babi is based on https://github.com/YerevaNN/Dynamic-memory-networks-in-Theano.
 
-**Pretrained models on bAbI tasks can be tested [online](http://yerevann.com/dmn-ui/).**
-
-We will cover the process in a series of blog posts.
-* [The first post](http://yerevann.github.io/2016/02/05/implementing-dynamic-memory-networks/) describes the details of the basic architecture and presents our first results on [bAbI tasks](http://fb.ai/babi) v1.2.
-* [The second post](http://yerevann.github.io/2016/02/23/playground-for-babi-tasks/) describes our second model called `dmn_smooth` and introduces our [playground for bAbI tasks](http://yerevann.com/dmn-ui/).
-
-## Repository contents
+## Repository contents (copied from YeveraNN/DMN in Theano)
 
 | file | description |
 | --- | --- |
@@ -24,8 +18,29 @@ We will cover the process in a series of blog posts.
 | `fetch_glove_data.sh` | shell script to fetch GloVe vectors (by [5vision](https://github.com/5vision/kaggle_allen)) |
 | `server/` | contains Flask-based restful api server |
 
+## Repository contents (our addition for MCTest)
 
-## Usage
+no mini-batch implementation. the _fix substript in network means the word embedding is loaded from glove with unknown set to 0 and is not retrained during training. those without _fix uses embedding matrix initialized from glove but allowed to retrain during training. 
+
+| file | description |
+| --- | --- |
+| `main_mc.py` | the main entry point to train and test available network architectures on MCTest tasks |
+| `mc_gru_dot_fix.py` | choices are dot-product with fianl memory state m in answer module. basic idea is a cos-similarity |
+| `mc_gru_dot.py`  | see above |
+| `mc_gru_pend_fix.py` | choice used in attention. this closely resemble dmn_qa_draft in architect. | 
+| `mc_gru_pend.py` | see above | 
+| `mctest_parse.py` | tools for parsing from raw mctest data. can be used to preprocessing word2vec embedding and save to memory |
+
+## Repository contents (our addition for visualization)
+
+no mini-batch implementation. the _fix substript in network means the word embedding is loaded from glove with unknown set to 0 and is not retrained during training. those without _fix uses embedding matrix initialized from glove but allowed to retrain during training. 
+
+| file | description |
+| --- | --- |
+| `view_mc.py` | visualize attention gate at each episode. |
+| `view_babi.py` | visualize attention gate at each episode |
+
+## DMN on babi Usage
 
 This implementation is based on Theano and Lasagne. One way to install them is:
 

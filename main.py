@@ -19,12 +19,12 @@ parser.add_argument('--load_state', type=str, default="", help='state file path'
 parser.add_argument('--answer_module', type=str, default="feedforward", help='answer module type: feedforward or recurrent')
 parser.add_argument('--mode', type=str, default="train", help='mode: train or test. Test mode required load_state')
 parser.add_argument('--input_mask_mode', type=str, default="sentence", help='input_mask_mode: word or sentence')
-parser.add_argument('--memory_hops', type=int, default=5, help='memory GRU steps')
+parser.add_argument('--memory_hops', type=int, default=3, help='memory GRU steps')
 parser.add_argument('--batch_size', type=int, default=10, help='no commment')
 parser.add_argument('--babi_id', type=str, default="1", help='babi task ID')
 parser.add_argument('--l2', type=float, default=0, help='L2 regularization')
 parser.add_argument('--normalize_attention', type=bool, default=False, help='flag for enabling softmax on attention vector')
-parser.add_argument('--log_every', type=int, default=200, help='print information every x iteration')
+parser.add_argument('--log_every', type=int, default=500, help='print information every x iteration')
 parser.add_argument('--save_every', type=int, default=1, help='save state every x epoch')
 parser.add_argument('--prefix', type=str, default="", help='optional prefix of network name')
 parser.add_argument('--no-shuffle', dest='shuffle', action='store_false')
@@ -122,7 +122,7 @@ def do_epoch(mode, epoch, skipped=0):
                 y_pred.append(x)
             
             # TODO: save the state sometimes
-            if (i % args.log_every == 0):
+            if (i % args.log_every == (args.log_every-1)):
                 cur_time = time.time()
                 print ("  %sing: %d.%d / %d \t loss: %.3f \t avg_loss: %.3f \t skipped: %d \t %s \t time: %.2fs" % 
                     (mode, epoch, i * args.batch_size, batches_per_epoch * args.batch_size, 

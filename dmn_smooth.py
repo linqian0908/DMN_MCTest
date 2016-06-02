@@ -110,6 +110,7 @@ class DMN_smooth:
         if self.dropout > 0 and self.mode == 'train':
             net = layers.DropoutLayer(net, p=self.dropout)
         last_mem = layers.get_output(net)[0]
+        self.attentions = T.stack(self.attentions)
         
         print "==> building answer module"
         self.W_a = nn_utils.normal_param(std=0.1, shape=(self.vocab_size, self.dim))
@@ -182,12 +183,13 @@ class DMN_smooth:
         if self.mode == 'train':
             print "==> compiling train_fn"
             self.train_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var], 
+                                            allow_input_downcast = True,
                                             outputs=[self.prediction, self.loss],
                                             updates=updates)
         
-        self.attentions = T.stack(self.attentions)
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var],
+                                       allow_input_downcast = True,
                                        outputs=[self.prediction, self.loss, self.attentions])
         
     
@@ -376,9 +378,10 @@ class DMN_smooth:
                 
     def predict(self, data):
         # data is an array of objects like {"Q": "question", "C": "sentence ."}
-        data[0]["A"] = "."
+        #data[0]["A"] = "."
         print "==> predicting:", data
         inputs, questions, answers, input_masks = self._process_input(data)
         probabilities, loss, attentions = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0])
-        return probabilities, attentions
+        ans = self.ivocab[probabilities.argmax()]
+        return ans, probabilities, attentions
 

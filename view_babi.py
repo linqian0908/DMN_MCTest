@@ -11,12 +11,10 @@ import nn_utils
 import mctest_parse
 import cPickle
 
-from mctest_parse import print_words
-
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="gru_dot_fixed", help='network type: gru_pend, gru_dot, gru_pend_fix')
+parser.add_argument('--network', type=str, default="dmn_smooth", help='network type: dmn_batch, dmn_basic, dmn_smooth')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs')
@@ -26,7 +24,7 @@ parser.add_argument('--mode', type=str, default="test", help='mode: train or tes
 parser.add_argument('--input_mask_mode', type=str, default="sentence", help='input_mask_mode: word or sentence')
 parser.add_argument('--memory_hops', type=int, default=3, help='memory GRU steps')
 parser.add_argument('--batch_size', type=int, default=10, help='no commment')
-parser.add_argument('--id', type=str, default="mc160", help='MCTest task ID')
+parser.add_argument('--babi_id', type=str, default="1", help='Babi ID 1-20')
 parser.add_argument('--l2', type=float, default=0.001, help='L2 regularization')
 parser.add_argument('--normalize_attention', type=bool, default=False, help='flag for enabling softmax on attention vector')
 parser.add_argument('--log_every', type=int, default=500, help='print information every x iteration')
@@ -42,53 +40,64 @@ print args
 
 assert args.word_vector_size in [50, 100, 200, 300]
 
-train_raw, dev_raw, test_raw, train_w, dev_w, test_w, vocab = mctest_parse.build_mc(args.id)
-if args.load_embed: # read preprossed data and embedding matrix
-    word2vec = mctest_parse.read_embedding(args.id,args.word_vector_size)
-else:
-    word2vec = mctest_parse.build_embedding(vocab,args.word_vector_size)
+babi_train_raw, babi_test_raw = utils.get_babi_raw(args.babi_id, args.babi_id)
+
+word2vec = utils.load_glove(args.word_vector_size)
 
 args_dict = dict(args._get_kwargs())
-args_dict['train_raw'] = train_raw
-args_dict['dev_raw'] = dev_raw
-args_dict['test_raw'] = test_raw
+args_dict['babi_train_raw'] = babi_train_raw
+args_dict['babi_test_raw'] = babi_test_raw
 args_dict['word2vec'] = word2vec
 
 # init class
-if args.network == 'gru_pend':
-    from mc_gru_pend import DMN
-elif args.network == 'gru_dot':
-    from mc_gru_dot import DMN
-elif args.network == 'gru_pend_fix':
-    from mc_gru_pend_fix import DMN
-elif args.network == 'gru_dot_fix':
-    from mc_gru_dot_fix import DMN
+if args.network == 'dmn_batch':
+    import dmn_batch
+    dmn = dmn_batch.DMN_batch(**args_dict)
+
+elif args.network == 'dmn_basic':
+    import dmn_basic
+    if (args.batch_size != 1):
+        print "==> no minibatch training, argument batch_size is useless"
+        args.batch_size = 1
+    dmn = dmn_basic.DMN_basic(**args_dict)
+
+elif args.network == 'dmn_smooth':
+    import dmn_smooth
+    if (args.batch_size != 1):
+        print "==> no minibatch training, argument batch_size is useless"
+        args.batch_size = 1
+    dmn = dmn_smooth.DMN_smooth(**args_dict)
 else: 
     raise Exception("No such network known: " + args.network)
     
 if (args.batch_size != 1):
         print "==> no minibatch training, argument batch_size is useless"
         args.batch_size = 1
-dmn = DMN(**args_dict)
 
 if args.load_state != "":
     dmn.load_state(args.load_state)
-
-unseen_raw = dev_raw + test_raw
-unseen_w = dev_w + test_w
+    
 input_str = ""
 while not input_str=="exit":
     print "==> Training sample"
-    n = random.randint(0,len(train_raw)-1)
-    print_words(train_w[n])
-    prob, attentions = dmn.predict([train_raw[n]])
+    n = random.randint(0,len(babi_train_raw)-1)
+    ans, prob, attentions = dmn.predict([babi_train_raw[n]])
+    if ans == babi_train_raw[n]["A"]:
+        print "Correct!"
+    else:
+        print "Wrong :("
+    print '...Prediction: {}'.format(ans)
     print '...Confidence: {}'.format(prob.max())
     print attentions
     
     print "==> Test/dev sample"
-    n = random.randint(0,len(unseen_raw)-1)
-    print_words(unseen_w[n])
-    prob, attentions = dmn.predict([unseen_raw[n]])
+    n = random.randint(0,len(babi_test_raw)-1)
+    ans, prob, attentions = dmn.predict([babi_test_raw[n]])    
+    if ans == babi_test_raw[n]["A"]:
+        print "Correct!"
+    else:
+        print "Wrong :("
+    print '...Prediction: {}'.format(ans)
     print '...Confidence: {}'.format(prob.max())
     print attentions
     

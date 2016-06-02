@@ -40,7 +40,8 @@ class DMN_batch:
         self.normalize_attention = normalize_attention
         self.batch_norm = batch_norm
         self.dropout = dropout
-
+        self.attentions = []
+        
         self.train_input, self.train_q, self.train_answer, self.train_fact_count, self.train_input_mask = self._process_input(babi_train_raw)
         self.test_input, self.test_q, self.test_answer, self.test_fact_count, self.test_input_mask = self._process_input(babi_test_raw)
         self.vocab_size = len(self.vocab)
@@ -128,6 +129,7 @@ class DMN_batch:
             net = layers.DropoutLayer(net, p=self.dropout)
         last_mem = layers.get_output(net).dimshuffle((1, 0))
         
+        self.attentions = T.stack(self.attentions)
         
         print "==> building answer module"
         self.W_a = nn_utils.normal_param(std=0.1, shape=(self.vocab_size, self.dim))
@@ -200,13 +202,15 @@ class DMN_batch:
             print "==> compiling train_fn"
             self.train_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, 
                                                     self.fact_count_var, self.input_mask_var], 
+                                            allow_input_downcast = True,
                                             outputs=[self.prediction, self.loss],
                                             updates=updates)
         
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, 
                                                self.fact_count_var, self.input_mask_var],
-                                       outputs=[self.prediction, self.loss])
+                                       allow_input_downcast = True,
+                                       outputs=[self.prediction, self.loss, self.attentions])
         
     
     
@@ -268,6 +272,8 @@ class DMN_batch:
         
         if (self.normalize_attention):
             g = nn_utils.softmax(g)
+        
+        self.attentions.append(g)
         
         e, e_updates = theano.scan(fn=self.new_episode_step,
             sequences=[self.inp_c, g],
@@ -451,4 +457,12 @@ class DMN_batch:
                 "skipped": 0,
                 "log": "pn: %.3f" % param_norm,
                 }
-        
+                
+    def predict(self, data):
+        # data is an array of objects like {"Q": "question", "C": "sentence ."}
+        #data[0]["A"] = "."
+        print "==> predicting:", data
+        inputs, questions, answers, fact_counts, input_masks = self._process_input(data)
+        probabilities, loss, attentions = self.test_fn([inputs[0]], [questions[0]], [answers[0]], [fact_counts[0]], [input_masks[0]])
+        ans = self.ivocab[probabilities[0].argmax()]
+        return ans, probabilities[0], attentions   

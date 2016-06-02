@@ -59,7 +59,7 @@ the parser also have a function called by main_mc to generate a parsed dataset (
 ## MCTest run
 run the main mctest network training
     
-    python main_mc.py --network mc_gru_dot_fix --id mc160
+    python main_mc.py --network gru_dot_fix --id mc160
 
 see the main_mc function for a list of options
 

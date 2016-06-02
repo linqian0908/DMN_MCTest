@@ -4,9 +4,5 @@
 4. transfer sueprvised attention model to DMN
 5. retrain GloVe on DMN corpas to better represent unknown wordss
 6. try reduce hid-dim in DMN to avoid overfitting (on current model or optimized model?)
-
 *7. redo simple LSTM baseline for MCTest and do model-size dependency -- for both multichoice and generative model . 
-
 *8. better visualizaiton of episode memory and debugging with it.
-
-*9. 

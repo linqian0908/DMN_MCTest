@@ -87,10 +87,7 @@ view_babi and view_mc can visualize attention gate over episode. Need to load fr
     
 ## Roadmap
 
-* Mini-batch training ([done](https://github.com/YerevaNN/Dynamic-memory-networks-in-Theano/blob/master/dmn_batch.py), 08/02/2016)
-* Web interface ([done](https://github.com/YerevaNN/dmn-ui), 08/23/2016)
-* Visualization of episodic memory module ([done](https://github.com/YerevaNN/dmn-ui), 08/23/2016)
-* Regularization (work in progress, L2 doesn't help at all, dropout and batch normalization help a little)
-* Support for multiple-choice questions ([work in progress](https://github.com/YerevaNN/Dynamic-memory-networks-in-Theano/blob/master/dmn_qa_draft.py))
-* Evaluation on more complex datasets
-* Import some ideas from [Neural Reasoner](http://arxiv.org/abs/1508.05508)
+Supervised training on babi
+Attention gate trained on babi and transfer to mctest
+MCtest with recurrent answer module and direct answer generation (ignore choices at test time)
+

@@ -13,7 +13,7 @@ import cPickle
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="gru_dot", help='network type: gru_pend, gru_dot, gru_pend_fix')
+parser.add_argument('--network', type=str, default="gru_dot_fix", help='network type: gru_pend, gru_dot, gru_pend_fix')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs')
@@ -70,6 +70,8 @@ elif args.network == 'gru_pend_fix':
     from mc_gru_pend_fix import DMN
 elif args.network == 'gru_dot_fix':
     from mc_gru_dot_fix import DMN
+elif args.network == 'rnn_dot_fix':
+    from mc_rnn_dot_fix import DMN
 else: 
     raise Exception("No such network known: " + args.network)
     

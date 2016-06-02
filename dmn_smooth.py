@@ -41,7 +41,11 @@ class DMN_smooth:
         self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
         self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
         self.vocab_size = len(self.vocab)
-
+        
+        print "Train size: ", len(self.train_input)
+        print "Test size: ", len(self.test_input)
+        print "Vocab size: ", len(self.vocab_size)
+        
         self.input_var = T.matrix('input_var')
         self.q_var = T.matrix('question_var')
         self.answer_var = T.iscalar('answer_var')

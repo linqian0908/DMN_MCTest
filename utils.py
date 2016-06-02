@@ -1,27 +1,36 @@
 import os as os
 import numpy as np
+import sys
 
 def init_babi(fname):
-    print "==> Loading test from %s" % fname
+    #print "==> Loading test from %s" % fname
     tasks = []
     task = None
+    seq_count = 0
+    err_count = 0
+    q_count = 1
     for i, line in enumerate(open(fname)):
         id = int(line[0:line.find(' ')])
         if id == 1:
-            task = {"C": "", "Q": "", "A": ""} 
+            task = {"C": "", "Q": "", "A": "", "S":[]}
+            seq_count = 0
+            q_count = 1
             
         line = line.strip()
         line = line.replace('.', ' . ')
         line = line[line.find(' ')+1:]
         if line.find('?') == -1:
             task["C"] += line
+            seq_count += 1
         else:
             idx = line.find('?')
             tmp = line[idx+1:].split('\t')
             task["Q"] = line[:idx]
             task["A"] = tmp[1].strip()
-            tasks.append(task.copy())
-
+            task["S"] = [int(w)-q_count for w in tmp[2].split(" ")]
+            tasks.append(task.copy())            
+            q_count += 1
+            
     return tasks
     
 def get_babi_raw(id, test_id):
@@ -119,3 +128,7 @@ def process_word(word, word2vec, vocab, ivocab, word_vector_size, to_return="wor
 def get_norm(x):
     x = np.array(x)
     return np.sum(x * x)
+
+if __name__ == "__main__":
+    babi_id = sys.argv[1]
+    babi_train_raw, babi_test_raw = get_babi_raw(babi_id, babi_id)

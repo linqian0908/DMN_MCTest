@@ -199,6 +199,8 @@ def build_embedding(word_to_id, vocab_dim):
             if sr[0] in word_to_id:
                 embedding_weights[word_to_id[sr[0]]] = np.array([float(i) for i in sr[1:]])
                 found_word += 1
+            else:
+                print sr[0]
     print 'Words loaded from glove: {}'.format(found_word)
     return embedding_weights
 

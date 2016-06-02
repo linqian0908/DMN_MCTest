@@ -1,7 +1,7 @@
 {
   "shuffle": true, 
   "memory_hops": 5, 
-  "epochs": 500, 
+  "epochs": 30, 
   "prefix": "", 
   "answer_module": "feedforward", 
   "id": "dmn_basic.mh5.n40.bs10.babi1", 
@@ -13,7 +13,7 @@
   "dropout": 0.0, 
   "batch_size": 1, 
   "word_vector_size": 50, 
-  "log_every": 1, 
+  "log_every": 500, 
   "save_every": 1, 
   "network": "dmn_basic", 
   "vocab": [

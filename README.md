@@ -46,7 +46,30 @@ There is one pretrained state on the 1st bAbI task. It should give 100% accuracy
 
     python main.py --network dmn_basic --mode test --babi_id 1 --load_state states/dmn_basic.mh5.n40.babi1.epoch4.test0.00033.state
 
+## MCTest data preprocessing:
+download MCTest data into data/MCTest.
+in root folder, run
+    
+    python mctest_parse.py [mc160|mc500] [50|100|200|300]
+    
+this generates the embedding matrix for mc160 and mc500, from glove.[50] ect.
 
+the parser also have a function called by main_mc to generate a parsed dataset (converted to index). The returned data structure is a list of {"C":[[w]],"Q":[w],"A":[w],"O":[[w]]} for each question task
+
+## MCTest run
+run the main mctest network training
+    
+    python main_mc.py --network mc_gru_dot_fix --id mc160
+
+see the main_mc function for a list of options
+
+## Visualize episode memory
+view_babi and view_mc can visualize attention gate over episode. Need to load from pretrain model. Currently only dmn_smooth, dmn_batch, mc_gru_dot_fix network supports viewing.
+
+    python view_babi.py --network dmn_smooth --babi_id 2 --load_state states/dmn_smooth.mh3.n40.bs10.babi2.epoch29.test6.43988.state
+    
+    python view_mc.py --network mc_gru_dot_fix --id mc160 --load_state states/gru_dot_fix.mh3.n40.bs10.d0.3.mc160.epoch25.test5.22941.state
+    
 ## Roadmap
 
 * Mini-batch training ([done](https://github.com/YerevaNN/Dynamic-memory-networks-in-Theano/blob/master/dmn_batch.py), 08/02/2016)

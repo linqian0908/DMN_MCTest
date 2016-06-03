@@ -152,13 +152,13 @@ class DMN:
             print "==> compiling train_fn"
             self.train_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var, self.gates_var], 
                                             allow_input_downcast = True,
-                                            outputs=[self.prediction, self.loss, self.attentions,self.inp_c, self.q_q],
+                                            outputs=[self.prediction, self.loss, self.attentions],
                                             updates=updates)
         
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var, self.gates_var],
                                        allow_input_downcast = True,
-                                       outputs=[self.prediction, self.loss, self.attentions,self.inp_c, self.q_q])
+                                       outputs=[self.prediction, self.loss, self.attentions])
 
         if self.mode == 'train':
             print "==> computing gradients (for debugging)"
@@ -355,11 +355,6 @@ class DMN:
                 "answers": np.array([ans]),
                 "current_loss": ret[1],
                 "log": "pn: %.3f" % param_norm,
-                "attentions": np.array(ret[2]),
-                "gate": sgate,
-                "mask": input_mask,
-                "inp_c": np.array(ret[3]),
-                "q_q": np.array(ret[4]),
                 "skipped": skipped
                 }
                 
@@ -369,7 +364,7 @@ class DMN:
         print "==> predicting:", data
         inputs, questions, answers, input_masks, gates = self._process_input(data)
         print gates
-        probabilities, loss, attentions,_,_ = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0], gates[0])
+        probabilities, loss, attentions = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0], gates[0])
         ans = self.ivocab[probabilities.argmax()]
         return ans, probabilities, attentions
 

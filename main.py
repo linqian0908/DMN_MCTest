@@ -79,7 +79,6 @@ def do_epoch(mode, epoch):
         answers = step_data["answers"]
         current_loss = step_data["current_loss"]
         log = step_data["log"] 
-        attentions = step_data["attentions"]
         current_skip = step_data["skipped"]
         skipped+=current_skip
         
@@ -101,12 +100,6 @@ def do_epoch(mode, epoch):
                 prev_time = cur_time
         
         if np.isnan(current_loss):
-            print "Err: prediction: ", prediction
-            print "Err: attentions: ", attentions
-            print "Err: supervised: ", step_data['gate']
-            print "Err: maks length: ", len(step_data['mask'])
-            print "Err: inq_c", step_data['inp_c']
-            print "Err: q_q", step_data["q_q"]
             print "==> current loss IS NaN. This should never happen :) " 
             exit()
 

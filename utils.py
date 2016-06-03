@@ -30,30 +30,33 @@ def init_babi(fname):
     tasks = []
     task = None
     seq_count = 0
+    line_count = 0
+    line_map = {}
     err_count = 0
-    q_count = 0
+    
     for i, line in enumerate(open(fname)):
         id = int(line[0:line.find(' ')])
         if id == 1:
             task = {"C": "", "Q": "", "A": "", "S":[]}
             seq_count = 0
-            q_count = 0
+            line_count = 0
+            line_map ={}
             
         line = line.strip()
         line = line.replace('.', ' . ')
         line = line[line.find(' ')+1:]
+        line_count += 1
         if line.find('?') == -1:
-            task["C"] += line
-            seq_count += 1
+            task["C"] += line        
+            line_map[line_count] = seq_count
+            seq_count += 1    
         else:
             idx = line.find('?')
             tmp = line[idx+1:].split('\t')
             task["Q"] = line[:idx]
             task["A"] = tmp[1].strip()
-            task["S"] = [int(w)-q_count for w in tmp[2].split(" ")]
-            print task["S"]
-            tasks.append(task.copy())            
-            q_count += 1           
+            task["S"] = [line_map[int(w)] for w in tmp[2].split(" ")]
+            tasks.append(task.copy())
     return tasks
     
 def get_babi_raw(id, test_id):

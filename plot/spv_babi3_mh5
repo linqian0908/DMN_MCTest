@@ -1,0 +1,162 @@
+sudo python view_babi.py --network dmn_spv --babi_id 3 --memory_hops 5 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch5.test2.28071.state
+
+@@@ correct_1
+==> Test/dev sample
+==> predicting: [{'Q': 'Where was the apple before the hallway', 'A': 'bathroom', 'C': 'Sandra picked up the milk . John went back to the bedroom . Sandra moved to the garden . John travelled to the kitchen . Sandra dropped the milk . Sandra went to the office . Sandra went to the hallway . Sandra moved to the garden . John went back to the office . Daniel moved to the bedroom . Sandra moved to the office . Mary went to the hallway . Daniel went back to the office . Mary took the apple . Mary journeyed to the bathroom . Mary travelled to the hallway . Mary put down the apple . Sandra went to the kitchen . ', 'S': [16, 15, 14]}]
+[array([16, 15, 14, 18, 18], dtype=int32)]
+Correct!
+...Prediction: bathroom
+...Confidence: 0.455202847719
+[[  1.14801187e-04   3.97775802e-05   5.37397755e-05   4.77679787e-05
+    2.41437359e-04   4.15100913e-05   5.87518116e-05   7.57540110e-05
+    4.96136490e-05   9.69766479e-05   5.77578248e-05   7.14368434e-05
+    6.90482630e-05   2.87925377e-02   4.57978895e-04   9.35195014e-04
+    9.68097806e-01   6.63651153e-04   3.44933760e-05]
+ [  2.08004735e-06   1.75546360e-04   1.74020199e-04   1.82556745e-04
+    2.14820466e-06   1.30614324e-04   1.22303315e-01   1.83998389e-04
+    1.73679990e-04   2.24352552e-04   1.91218598e-04   2.84943581e-01
+    1.96568100e-04   5.17082071e-06   3.50782997e-04   5.89739859e-01
+    1.24485696e-05   1.00502593e-03   3.06866264e-06]
+ [  1.60935251e-05   4.51087765e-03   1.01088062e-02   1.30979456e-02
+    1.60090876e-05   3.58192693e-03   1.90526024e-02   3.77545436e-03
+    4.86116810e-03   5.81408525e-03   5.62633388e-03   1.88496057e-02
+    1.09126018e-02   4.35776783e-05   7.11591423e-01   1.42284900e-01
+    1.27055129e-04   4.53240573e-02   4.05434927e-04]
+ [  9.78198217e-11   3.63551494e-10   5.65613734e-09   4.26791313e-09
+    9.79116649e-11   1.26730859e-09   1.76454584e-08   2.67313616e-09
+    1.87337523e-09   3.75542875e-10   1.27281718e-09   1.46865817e-08
+    2.63536992e-09   1.00590182e-10   1.88927331e-07   5.41982139e-08
+    1.01294848e-10   3.67326898e-08   9.99999702e-01]
+ [  9.71995574e-12   1.80906783e-11   7.27128288e-11   4.96539788e-11
+    9.77252654e-12   6.56604979e-11   6.39282127e-10   1.12155091e-10
+    7.51902984e-11   3.47258715e-11   8.04329658e-11   7.33536343e-10
+    8.05527173e-11   9.74412304e-12   1.26120045e-10   1.30509348e-09
+    9.98365019e-12   7.08074432e-10   1.00000000e+00]]
+
+@@@ wrong_1
+==> Test/dev sample
+==> predicting: [{'Q': 'Where was the milk before the office', 'A': 'hallway', 'C': 'Sandra moved to the hallway . Daniel journeyed to the bedroom . John went to the bathroom . Mary grabbed the apple . John moved to the kitchen . Mary went to the office . John went back to the bathroom . John picked up the football there . Mary left the apple . Mary grabbed the apple . John dropped the football . Sandra travelled to the kitchen . Mary went to the kitchen . Sandra grabbed the milk . John journeyed to the kitchen . Sandra went to the hallway . John moved to the garden . Sandra went to the office . ', 'S': [13, 17, 15]}]
+[array([13, 17, 15, 18, 18], dtype=int32)]
+Wrong :(
+...Prediction: bedroom
+...Confidence: 0.312373369932
+[[  8.03082457e-07   1.10739904e-06   7.97562734e-07   7.58130864e-06
+    1.07618143e-06   1.15335047e-06   8.25445454e-07   6.26819747e-06
+    2.31063532e-05   2.54062306e-05   4.95135055e-06   1.73726562e-06
+    2.66707252e-06   9.99478161e-01   3.12945893e-04   6.59686702e-05
+    2.75531747e-05   3.56775490e-05   2.18307105e-06]
+ [  1.84935857e-07   1.62219663e-07   8.56953193e-08   2.99511083e-09
+    8.34239202e-08   4.22495417e-04   1.39012371e-07   1.03876578e-08
+    4.67913797e-09   3.84027166e-09   9.74093251e-09   5.25985854e-07
+    5.42814917e-07   3.53229490e-09   4.31551734e-06   1.12733105e-04
+    1.83076645e-05   9.99440312e-01   7.21926741e-09]
+ [  1.95389794e-06   1.32838250e-06   9.23498419e-07   1.79996533e-08
+    2.87843568e-06   1.83311113e-05   3.45341800e-06   1.87310345e-08
+    1.81194544e-08   1.94055509e-08   1.81012858e-08   1.51522790e-05
+    5.21122238e-05   9.62379900e-08   8.97139132e-01   8.24134201e-02
+    1.97027847e-02   6.47736422e-04   6.48618197e-07]
+ [  2.49320321e-11   1.90839202e-11   1.90599116e-11   1.59090605e-11
+    3.59287045e-11   5.59350177e-10   2.61171831e-11   1.69954901e-11
+    1.57880861e-11   1.60175154e-11   1.61350152e-11   5.94514785e-11
+    1.05981293e-10   2.23134063e-11   2.71347432e-07   3.09917922e-08
+    4.75019206e-08   2.13533689e-08   9.99999642e-01]
+ [  1.84554386e-11   7.08268166e-12   8.45399705e-12   5.37713233e-12
+    8.88991138e-12   1.27609132e-10   1.32425945e-11   6.20836065e-12
+    5.31193318e-12   5.38988559e-12   5.76516916e-12   1.64374781e-11
+    2.84586764e-11   8.89421956e-12   4.38069692e-10   1.90987573e-10
+    2.57292215e-10   7.21101290e-10   1.00000000e+00]]
+
+@@@ wrong_2
+==> Training sample
+==> predicting: [{'Q': 'Where was the apple before the office', 'A': 'hallway', 'C': 'Sandra went back to the hallway . Daniel took the apple . John travelled to the kitchen . Daniel travelled to the bedroom . Daniel got the football there . Daniel went to the hallway . Mary went back to the bedroom . Daniel discarded the football . Daniel got the football . Mary went to the garden . Daniel travelled to the office . Daniel went back to the bedroom . Daniel went back to the hallway . Mary went back to the bathroom . Daniel dropped the apple . Sandra journeyed to the kitchen . ', 'S': [14, 10, 5]}]
+[array([14, 10,  5, 16, 16], dtype=int32)]
+Wrong :(
+...Prediction: bedroom
+...Confidence: 0.246124148369
+[[  8.59884858e-06   1.10973127e-03   1.55298094e-05   2.26114335e-05
+    1.68026934e-04   2.93425372e-04   2.27896471e-05   2.15796957e-04
+    2.45155767e-04   2.39514084e-05   1.50910550e-04   3.27178423e-05
+    1.96030189e-04   6.80451049e-05   9.97383654e-01   3.59218720e-05
+    7.08775133e-06]
+ [  1.13698320e-06   1.60276574e-08   8.49387334e-07   2.17500201e-06
+    7.26541316e-08   1.57681225e-05   9.24040432e-06   2.80384739e-07
+    2.10084195e-07   1.06388052e-05   9.99887168e-01   2.61308687e-05
+    3.34119468e-05   1.01267879e-05   6.76614462e-08   2.66216534e-06
+    2.80335382e-08]
+ [  6.68118446e-05   6.48605180e-07   1.53576408e-03   5.57447039e-03
+    8.01027454e-07   1.84291527e-01   6.58602342e-02   5.49249648e-07
+    7.06047217e-07   7.45173395e-02   1.73125118e-02   4.84644145e-01
+    1.25125781e-01   3.39666680e-02   1.56443377e-06   7.05518294e-03
+    4.52829263e-05]
+ [  6.19001812e-13   4.98548251e-13   6.10871380e-13   6.53222864e-13
+    5.07133886e-13   1.30419876e-11   7.62972693e-13   4.83331257e-13
+    4.90676727e-13   2.58855784e-12   5.70069061e-11   7.86036817e-13
+    3.57968191e-12   1.67677775e-12   4.92307909e-13   6.10489361e-13
+    1.00000000e+00]
+ [  2.67892609e-12   4.20456801e-13   6.86372020e-13   9.80339941e-13
+    4.13770906e-13   9.96230702e-12   1.68417222e-12   3.95625020e-13
+    4.02776011e-13   4.05200396e-12   1.74221419e-11   1.66879802e-12
+    6.05000989e-12   4.62677422e-12   4.15475922e-13   9.93368799e-13
+    1.00000000e+00]]
+
+@@@ wrong_3
+==> Training sample
+==> predicting: [{'Q': 'Where was the football before the garden', 'A': 'bathroom', 'C': 'John went back to the bedroom . Mary picked up the football . Mary left the football . Mary went back to the hallway . Daniel journeyed to the office . John picked up the milk . John went to the office . Mary went back to the garden . John moved to the garden . Sandra went to the bedroom . Mary grabbed the football . Daniel went back to the bathroom . Mary travelled to the bathroom . Mary went to the garden . Daniel went back to the bedroom . Mary discarded the football . ', 'S': [15, 13, 12]}]
+[array([15, 13, 12, 16, 16], dtype=int32)]
+Wrong :(
+...Prediction: hallway
+...Confidence: 0.383413642645
+[[  1.78021608e-11   1.14700204e-04   4.39167838e-04   1.24617716e-09
+    2.86262070e-10   2.90616042e-09   1.85157070e-10   1.77344650e-09
+    1.99125649e-09   4.71228778e-10   1.88138664e-01   1.82459092e-09
+    1.81883697e-09   1.66343401e-08   1.88682336e-09   8.11307371e-01
+    8.40449498e-12]
+ [  7.81358176e-06   1.17428158e-07   3.91952796e-07   1.79273498e-04
+    8.89257426e-05   2.64697093e-07   4.42936471e-05   2.31969163e-01
+    2.50956297e-01   9.33795469e-04   1.06996731e-06   3.51104914e-04
+    3.78131808e-04   5.11760473e-01   3.32628912e-03   2.30706655e-06
+    3.03310060e-07]
+ [  1.48255549e-05   1.28296506e-07   2.03210050e-07   2.63156649e-02
+    4.45931451e-03   4.57443321e-07   3.51141840e-02   1.63955160e-03
+    1.44468213e-03   7.55061675e-03   2.87109515e-06   4.44562912e-01
+    4.42262530e-01   7.53533747e-03   2.90864818e-02   6.67549273e-07
+    9.56461372e-06]
+ [  7.72989398e-12   6.43486089e-12   6.56152693e-12   2.29180830e-09
+    1.07368552e-10   5.99154667e-12   6.80811865e-11   1.01348274e-09
+    1.18921495e-09   1.77126189e-10   1.02722535e-11   1.44288652e-08
+    1.16807062e-08   1.51355661e-09   1.91052063e-10   6.68038324e-12
+    1.00000000e+00]
+ [  1.96134012e-11   3.85189667e-12   4.20361619e-12   9.82136261e-10
+    8.96006810e-11   3.38942025e-12   3.31462149e-11   2.89265445e-10
+    3.28843952e-10   9.04827255e-11   5.58475662e-12   2.53067256e-09
+    2.87908208e-09   7.58137497e-10   1.30719782e-10   4.38546638e-12
+    1.00000000e+00]]
+
+@@@ correct 2
+==> Training sample
+==> predicting: [{'Q': 'Where was the milk before the office', 'A': 'hallway', 'C': 'John journeyed to the garden . Sandra went back to the office . Sandra moved to the garden . John moved to the kitchen . Mary travelled to the kitchen . John took the milk . John moved to the hallway . John went to the office . Daniel journeyed to the kitchen . Mary moved to the bathroom . John discarded the milk there . Sandra journeyed to the bathroom . ', 'S': [10, 7, 6]}]
+[array([10,  7,  6, 12, 12], dtype=int32)]
+Correct!
+...Prediction: hallway
+...Confidence: 0.310670554638
+[[  1.42618793e-03   1.13344437e-03   1.39503286e-03   1.50487281e-03
+    1.40287238e-03   4.61682737e-01   6.62693381e-02   1.74124781e-02
+    5.52306371e-03   2.67381687e-03   4.34106439e-01   2.40601879e-03
+    3.06367571e-03]
+ [  3.48286958e-05   6.34750584e-03   1.43517522e-04   3.73975308e-05
+    2.39694600e-05   1.50716801e-06   2.11391904e-04   9.92648542e-01
+    1.97061483e-04   2.07129327e-04   1.59552826e-06   1.41815210e-04
+    3.71733563e-06]
+ [  1.14935718e-03   4.13634256e-03   6.73097093e-04   2.66220013e-04
+    2.28760036e-04   1.77949205e-05   6.70110881e-01   3.42150591e-02
+    2.26029709e-01   5.37888482e-02   1.62976739e-05   8.91409814e-03
+    4.53548739e-04]
+ [  1.65498892e-10   1.83086490e-10   1.63754954e-10   1.63680638e-10
+    1.63695613e-10   1.65034889e-10   1.46475831e-09   9.05018105e-09
+    2.78740447e-10   4.69251971e-10   1.66640479e-10   2.25931621e-10
+    1.00000000e+00]
+ [  5.91990484e-11   5.84897200e-11   5.45489938e-11   5.38144425e-11
+    5.34600593e-11   6.07763145e-11   5.19794152e-10   7.50754015e-10
+    8.99882530e-11   2.22877744e-10   6.43168574e-11   1.57103289e-10
+    1.00000000e+00]]
+

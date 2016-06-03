@@ -1,5 +1,7 @@
 import random
 import numpy as np
+import sys
+import pylab as plt
 
 import theano
 import theano.tensor as T
@@ -127,7 +129,7 @@ class DMN:
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid,
                   self.W_mem_res_in, self.W_mem_res_hid, self.b_mem_res, 
                   self.W_mem_upd_in, self.W_mem_upd_hid, self.b_mem_upd,
-                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid, #self.W_b
+                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid, #self.W_b,
                   self.W_1, self.W_2, self.b_1, self.b_2, self.W_a]        
         
         print "==> building loss layer and computing updates"
@@ -143,21 +145,26 @@ class DMN:
         
         self.loss = self.loss_ce + self.loss_l2 + self.loss_gate
         
-        updates = lasagne.updates.adadelta(self.loss, self.params)
+        updates = lasagne.updates.adam(self.loss, self.params)
         #updates = lasagne.updates.momentum(self.loss, self.params, learning_rate=0.0003)
         
         if self.mode == 'train':
             print "==> compiling train_fn"
             self.train_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var, self.gates_var], 
                                             allow_input_downcast = True,
-                                            outputs=[self.prediction, self.loss],
+                                            outputs=[self.prediction, self.loss, self.attentions,self.inp_c, self.q_q],
                                             updates=updates)
         
         print "==> compiling test_fn"
         self.test_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var, self.gates_var],
                                        allow_input_downcast = True,
-                                       outputs=[self.prediction, self.loss, self.attentions])
-        
+                                       outputs=[self.prediction, self.loss, self.attentions,self.inp_c, self.q_q])
+
+        if self.mode == 'train':
+            print "==> computing gradients (for debugging)"
+            gradient = T.grad(self.loss, self.params)
+            self.get_gradient_fn = theano.function(inputs=[self.input_var, self.q_var, self.answer_var, self.input_mask_var, self.gates_var],
+                                                           allow_input_downcast = True, outputs=gradient)        
     
     def GRU_update(self, h, x, W_res_in, W_res_hid, b_res,
                          W_upd_in, W_upd_hid, b_upd,
@@ -274,9 +281,9 @@ class DMN:
             mask.append(mask[-1]+1)
             input_masks.append(np.array(mask, dtype=np.int32))
             
-            gate = x["S"]
+            gate =[w for w in x["S"]]
             for i in xrange(len(gate),self.memory_hops):
-                gate.append(len(mask)-1)
+                gate.append(len(mask)-1) 
             gates.append(np.array(gate,dtype=np.int32))
             
         return inputs, questions, answers, input_masks, gates
@@ -317,20 +324,43 @@ class DMN:
             sgates = self.test_gates
         else:
             raise Exception("Invalid mode")
-            
+        
+        
         inp = inputs[batch_index]
         q = qs[batch_index]
         ans = answers[batch_index]
         input_mask = input_masks[batch_index]
         sgate = sgates[batch_index]
-
-        ret = theano_fn(inp, q, ans, input_mask, sgate)
+        
+        skipped = 0
+        grad_norm = float('NaN')
+        
+        if mode == 'train':
+            gradient_value = self.get_gradient_fn(inp, q, ans, input_mask,sgate)
+            grad_norm = np.max([utils.get_norm(x) for x in gradient_value])
+            
+            if (np.isnan(grad_norm)):
+                #print "==> gradient is nan at index %d." % batch_index
+                #print "==> skipping"
+                skipped = 1
+                
+        if skipped==0:
+            ret = theano_fn(inp, q, ans, input_mask, sgate)
+        else:
+            ret=[-1,-1,-1,-1,-1]
+            
         param_norm = np.max([utils.get_norm(x.get_value()) for x in self.params])
         
         return {"prediction": np.array([ret[0]]),
                 "answers": np.array([ans]),
                 "current_loss": ret[1],
                 "log": "pn: %.3f" % param_norm,
+                "attentions": np.array(ret[2]),
+                "gate": sgate,
+                "mask": input_mask,
+                "inp_c": np.array(ret[3]),
+                "q_q": np.array(ret[4]),
+                "skipped": skipped
                 }
                 
     def predict(self, data):
@@ -339,6 +369,36 @@ class DMN:
         print "==> predicting:", data
         inputs, questions, answers, input_masks, gates = self._process_input(data)
         print gates
-        probabilities, loss, attentions = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0], gates[0])
+        probabilities, loss, attentions,_,_ = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0], gates[0])
         ans = self.ivocab[probabilities.argmax()]
         return ans, probabilities, attentions
+
+if __name__ == "__main__":
+    file_name = sys.argv[1]
+    print "==> loading state %s" % file_name
+    params = ['W_inp_res_in', 'W_inp_res_hid', 'b_inp_res', 
+                  'W_inp_upd_in', 'W_inp_upd_hid', 'b_inp_upd',
+                  'W_inp_hid_in', 'W_inp_hid_hid', 'b_inp_hid',
+                  'W_mem_res_in', 'W_mem_res_hid', 'b_mem_res', 
+                  'W_mem_upd_in', 'W_mem_upd_hid', 'b_mem_upd',
+                  'W_mem_hid_in', 'W_mem_hid_hid', 'b_mem_hid', #self.W_b
+                  'W_1', 'W_2', 'b_1', 'b_2', 'W_a']  
+    fig, ax = plt.subplots(figsize=(9,4))    
+    with open(file_name, 'r') as load_file:
+        dict = pickle.load(load_file)
+        loaded_params = dict['params']
+        for (x, y) in zip(params, loaded_params):
+            n = y.shape
+            if len(n)==1:
+                n=n[0]
+            else:
+                n=n[0]*n[1]
+            norm = utils.get_norm(y)/n**0.5
+            print x,' shape: ',y.shape,', norm: ',norm,', max: ',np.max(np.abs(y))
+            if len(y.shape)>1:
+                ax.imshow(y,cmap = 'Blues',interpolation='none')
+                plt.title('Train. '+x+', norm '+str(norm))
+                fig.show()
+                input_str = raw_input("Press ENTER to continue. Type exit to stop: ")
+                if input_str=="exit":
+                    break

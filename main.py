@@ -71,31 +71,42 @@ def do_epoch(mode, epoch):
     prev_time = time.time()
     
     batches_per_epoch = dmn.get_batches_per_epoch(mode)
+    skipped = 0
     
     for i in range(0, batches_per_epoch):
         step_data = dmn.step(i, mode)
         prediction = step_data["prediction"]
         answers = step_data["answers"]
         current_loss = step_data["current_loss"]
-        log = step_data["log"]     
-
+        log = step_data["log"] 
+        attentions = step_data["attentions"]
+        current_skip = step_data["skipped"]
+        skipped+=current_skip
+        
         avg_loss += current_loss
         
-        for x in answers:
-            y_true.append(x)
-        
-        for x in prediction.argmax(axis=1):
-            y_pred.append(x)
-        
-        # TODO: save the state sometimes
-        if (i % args.log_every == (args.log_every-1)):
-            cur_time = time.time()
-            print ("  %sing: %d.%d / %d\tloss: %.3f\tavg_loss: %.3f\t%s\ttime: %.2fs" % 
-                (mode, epoch, i * args.batch_size, batches_per_epoch * args.batch_size, 
-                 current_loss, avg_loss / (i + 1),  log, cur_time - prev_time))
-            prev_time = cur_time
+        if current_skip==0:
+            for x in answers:
+                y_true.append(x)
+            
+            for x in prediction.argmax(axis=1):
+                y_pred.append(x)
+            
+            # TODO: save the state sometimes
+            if (i % args.log_every == (args.log_every-1)):
+                cur_time = time.time()
+                print ("  %sing: %d.%d/%d,  loss: %.3f,  avg_loss: %.3f,  %s,  time: %.2fs" % 
+                    (mode, epoch, i * args.batch_size, batches_per_epoch * args.batch_size, 
+                     current_loss, avg_loss / (i + 1),  log, cur_time - prev_time))
+                prev_time = cur_time
         
         if np.isnan(current_loss):
+            print "Err: prediction: ", prediction
+            print "Err: attentions: ", attentions
+            print "Err: supervised: ", step_data['gate']
+            print "Err: maks length: ", len(step_data['mask'])
+            print "Err: inq_c", step_data['inp_c']
+            print "Err: q_q", step_data["q_q"]
             print "==> current loss IS NaN. This should never happen :) " 
             exit()
 
@@ -105,6 +116,8 @@ def do_epoch(mode, epoch):
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
     
+    if skipped>0:
+        print "skipped in this epoch: ",skipped
     return avg_loss
 
 

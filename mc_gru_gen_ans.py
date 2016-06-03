@@ -15,37 +15,33 @@ import nn_utils
 
 floatX = theano.config.floatX
 
-
-class DMN_smooth:
+class DMN:
     
-    def __init__(self, babi_train_raw, babi_test_raw, word2vec, word_vector_size, 
-                dim, mode, answer_module, input_mask_mode, memory_hops, l2, 
-                normalize_attention, batch_norm, dropout, **kwargs):
+    def __init__(self, train_raw, dev_raw, test_raw, word2vec, word_vector_size, 
+                dim, mode, input_mask_mode, memory_hops, l2, normalize_attention, dropout, **kwargs):
 
         print "==> not used params in DMN class:", kwargs.keys()
         self.vocab = {}
         self.ivocab = {}
-        
         self.word2vec = word2vec
         self.word_vector_size = word_vector_size
         self.dim = dim
         self.mode = mode
-        self.answer_module = answer_module
+        
+        self.answer_module = 'feedforward'#answer_module
         self.input_mask_mode = input_mask_mode
         self.memory_hops = memory_hops
         self.l2 = l2
         self.normalize_attention = normalize_attention
-        self.batch_norm = batch_norm
         self.dropout = dropout
         
-        self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
-        self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
+        #self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(babi_train_raw)
+        #self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(babi_test_raw)
+        self.train_input, self.train_q, self.train_answer, self.train_input_mask = self._process_input(train_raw)#self.train_choices, 
+        self.dev_input, self.dev_q, self.dev_answer, self.dev_input_mask = self._process_input(dev_raw)#self.dev_choices, 
+        self.test_input, self.test_q, self.test_answer, self.test_input_mask = self._process_input(test_raw)#self.test_choices, 
         self.vocab_size = len(self.vocab)
-        
-        print "Train size: ", len(self.train_input)
-        print "Test size: ", len(self.test_input)
-        print "Vocab size: ", len(self.vocab_size)
-        
+
         self.input_var = T.matrix('input_var')
         self.q_var = T.matrix('question_var')
         self.answer_var = T.iscalar('answer_var')
@@ -119,10 +115,10 @@ class DMN_smooth:
         print "==> building answer module"
         self.W_a = nn_utils.normal_param(std=0.1, shape=(self.vocab_size, self.dim))
         
-        if self.answer_module == 'feedforward':
-            self.prediction = nn_utils.softmax(T.dot(self.W_a, last_mem))
+        if self.answer_module == 'feedforward':#
+            self.prediction = nn_utils.softmax(T.dot(self.W_a, last_mem))#
         
-        elif self.answer_module == 'recurrent':
+        elif self.answer_module == 'recurrent':#
             self.W_ans_res_in = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim + self.vocab_size))
             self.W_ans_res_hid = nn_utils.normal_param(std=0.1, shape=(self.dim, self.dim))
             self.b_ans_res = nn_utils.constant_param(value=0.0, shape=(self.dim,))
@@ -141,15 +137,20 @@ class DMN_smooth:
                                   self.W_ans_upd_in, self.W_ans_upd_hid, self.b_ans_upd,
                                   self.W_ans_hid_in, self.W_ans_hid_hid, self.b_ans_hid)
                 
+                # See error
                 y = nn_utils.softmax(T.dot(self.W_a, a))
-                return [a, y]
+                #print("W_a shape: ",self.W_a.shape)
+                #print("a shape: ", a)
+                # Conditional ending here: 
+                return [a, y]#,theano.scan_module.until(CONDITION) 
             
-            # TODO: add conditional ending
+            # TODO: add conditional ending, could be added into the scan
             dummy = theano.shared(np.zeros((self.vocab_size, ), dtype=floatX))
-            results, updates = theano.scan(fn=answer_step,
+            results, updates = theano.scan(fn=answer_step, 
                 outputs_info=[last_mem, T.zeros_like(dummy)],
                 n_steps=1)
             self.prediction = results[1][-1]
+            #print("prediction shape: ", self.prediction)
         
         else:
             raise Exception("invalid answer_module")
@@ -161,10 +162,10 @@ class DMN_smooth:
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid,
                   self.W_mem_res_in, self.W_mem_res_hid, self.b_mem_res, 
                   self.W_mem_upd_in, self.W_mem_upd_hid, self.b_mem_upd,
-                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid, #self.W_b
+                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid, self.W_b, #
                   self.W_1, self.W_2, self.b_1, self.b_2, self.W_a]
         
-        if self.answer_module == 'recurrent':
+        if self.answer_module == 'recurrent':#feedforward':
             self.params = self.params + [self.W_ans_res_in, self.W_ans_res_hid, self.b_ans_res, 
                               self.W_ans_upd_in, self.W_ans_upd_hid, self.b_ans_upd,
                               self.W_ans_hid_in, self.W_ans_hid_hid, self.b_ans_hid]
@@ -214,14 +215,12 @@ class DMN_smooth:
         z = T.nnet.sigmoid(T.dot(W_upd_in, x) + T.dot(W_upd_hid, h) + b_upd)
         r = T.nnet.sigmoid(T.dot(W_res_in, x) + T.dot(W_res_hid, h) + b_res)
         _h = T.tanh(T.dot(W_hid_in, x) + r * T.dot(W_hid_hid, h) + b_hid)
-        return z * h + (1 - z) * _h
-    
+        return z * h + (1 - z) * _h   
     
     def input_gru_step(self, x, prev_h):
         return self.GRU_update(prev_h, x, self.W_inp_res_in, self.W_inp_res_hid, self.b_inp_res, 
                                      self.W_inp_upd_in, self.W_inp_upd_hid, self.b_inp_upd,
                                      self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid)
-
     
     def new_attention_step(self, ct, prev_g, mem, q_q):
         #cWq = T.stack([T.dot(T.dot(ct, self.W_b), q_q)])
@@ -286,52 +285,52 @@ class DMN_smooth:
 
     
     def _process_input(self, data_raw):
-        questions = []
         inputs = []
+        questions = []
+        #choices = []
         answers = []
         input_masks = []
+        maxst = 0
+        maxq = 0
+        maxTc = 0
         for x in data_raw:
-            inp = x["C"].lower().split(' ') 
-            inp = [w for w in inp if len(w) > 0]
-            q = x["Q"].lower().split(' ')
-            q = [w for w in q if len(w) > 0]
+            inputs.append(np.vstack([self.word2vec[w] for s in x["C"] for w in s]).astype(floatX)) #(seq_len, embed)
+            maxst  =max(maxst,len(inputs[-1]))
+            questions.append(np.vstack([self.word2vec[w] for w in x["Q"]]).astype(floatX))
+            maxq = max(maxq,len(questions[-1]))                
+            #answers.append(x["A"])  #x["O"][x["A"]]
+            ans_opt = x["O"][x["A"]]
+            # NOTE: here we make the answer taking only the 1ast word!
+            #print(ans_opt)  # [105, 106, 7, 107, 30, 110, 111, 112]
+            #print(ans_opt[-1])  # 112
+            #rint(self.word2vec[ans_opt[-1]])
+            answers.append(ans_opt[-1])
+            # answers.append(utils.process_word(word = ans_opt[-1].lower(), # TODO: add .lower() here; Compare the 1st word 
+            #                                 word2vec = self.word2vec, 
+            #                                 vocab = self.vocab, 
+            #                                 ivocab = self.ivocab, 
+            #                                 word_vector_size = self.word_vector_size, 
+            #                                 to_return = "index"))#choices.append([np.vstack([self.word2vec[w] for w in opt]).astype(floatX) for opt in x["O"]])
             
-            inp_vector = [utils.process_word(word = w, 
-                                        word2vec = self.word2vec, 
-                                        vocab = self.vocab, 
-                                        ivocab = self.ivocab, 
-                                        word_vector_size = self.word_vector_size, 
-                                        to_return = "word2vec") for w in inp]
-                                        
-            q_vector = [utils.process_word(word = w, 
-                                        word2vec = self.word2vec, 
-                                        vocab = self.vocab, 
-                                        ivocab = self.ivocab, 
-                                        word_vector_size = self.word_vector_size, 
-                                        to_return = "word2vec") for w in q]
-            
-            inputs.append(np.vstack(inp_vector).astype(floatX))
-            questions.append(np.vstack(q_vector).astype(floatX))
-            answers.append(utils.process_word(word = x["A"], # TODO: add .lower() here 
-                                            word2vec = self.word2vec, 
-                                            vocab = self.vocab, 
-                                            ivocab = self.ivocab, 
-                                            word_vector_size = self.word_vector_size, 
-                                            to_return = "index"))
-            # NOTE: here we assume the answer is one word! 
             if self.input_mask_mode == 'word':
-                input_masks.append(np.array([index for index, w in enumerate(inp)], dtype=np.int32)) 
-            elif self.input_mask_mode == 'sentence': 
-                input_masks.append(np.array([index for index, w in enumerate(inp) if w == '.'], dtype=np.int32)) 
+                input_masks.append(np.array(xrange(len(inp_vector)), dtype=np.int32)) 
+            elif self.input_mask_mode == 'sentence':
+                sentence_length = np.array([len(s) for s in x["C"]], dtype=np.int32)
+                input_masks.append(np.cumsum(sentence_length,dtype=np.int32)-1) 
             else:
                 raise Exception("invalid input_mask_mode")
-        
-        return inputs, questions, answers, input_masks
-
+            maxTc = max(maxTc,len(input_masks[-1]))
+            
+        print("max statement length is {}".format(maxst))
+        print("max question length is {}".format(maxq))
+        print("max Tc length is {}".format(maxTc))
+        return inputs, questions, answers, input_masks#choices, (position 4)
     
     def get_batches_per_epoch(self, mode):
         if (mode == 'train'):
             return len(self.train_input)
+        elif (mode == 'dev'):
+            return len(self.dev_input)
         elif (mode == 'test'):
             return len(self.test_input)
         else:
@@ -367,6 +366,8 @@ class DMN_smooth:
         inp = inputs[batch_index]
         q = qs[batch_index]
         ans = answers[batch_index]
+        #print("ans shape: ", ans.shape)
+        #print("ans = ", ans)
         input_mask = input_masks[batch_index]
 
         ret = theano_fn(inp, q, ans, input_mask)
@@ -388,3 +389,4 @@ class DMN_smooth:
         probabilities, loss, attentions = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0])
         ans = self.ivocab[probabilities.argmax()]
         return ans, probabilities, attentions
+

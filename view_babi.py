@@ -62,6 +62,7 @@ if args.load_state != "":
     dmn.load_state(args.load_state)
     
 input_str = ""
+fig, ax = plt.subplots(figsize=(9,4))
 while not input_str=="exit":
     print "==> Training sample"
     n = random.randint(0,len(babi_train_raw)-1)
@@ -73,9 +74,10 @@ while not input_str=="exit":
     print '...Prediction: {}'.format(ans)
     print '...Confidence: {}'.format(prob.max())
     print attentions
-    plt.figure(0)
-    plt.imshow(attentions)
-    plt.show()
+    ax.imshow(attentions,cmap = 'Blues',interpolation='none')
+    plt.title('Train. '+str(babi_train_raw[n]["S"]))
+    fig.show()
+    input_str = raw_input("Press ENTER to continue. Type exit to stop: ")
     
     print "==> Test/dev sample"
     n = random.randint(0,len(babi_test_raw)-1)
@@ -87,8 +89,7 @@ while not input_str=="exit":
     print '...Prediction: {}'.format(ans)
     print '...Confidence: {}'.format(prob.max())
     print attentions
-    plt.figure(1)
-    plt.imshow(attentions)
-    plt.show()
-    
+    ax.imshow(attentions,cmap ='Blues',interpolation='none')
+    plt.title('Test. '+str(babi_test_raw[n]["S"]))
+    fig.show()    
     input_str = raw_input("Press ENTER to continue. Type exit to stop: ")

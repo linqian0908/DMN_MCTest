@@ -1,0 +1,139 @@
+➜  dmn git:(master) ✗ sudo python main.py --network dmn_spv --babi_id 2 --memory_hops 3 
+==> parsing input arguments
+Namespace(answer_module='feedforward', babi_id='2', babi_test_id='', batch_norm=False, batch_size=10, dim=40, dropout=0.0, epochs=30, input_mask_mode='sentence', l2=0, load_state='', log_every=2000, memory_hops=3, mode='train', network='dmn_spv', normalize_attention=False, prefix='', save_every=1, shuffle=True, word_vector_size=50)
+==> loading glove
+==> glove is loaded
+==> no minibatch training, argument batch_size is useless
+==> not used params in DMN class: ['shuffle', 'normalize_attention', 'babi_id', 'batch_size', 'babi_test_id', 'epochs', 'prefix', 'answer_module', 'log_every', 'load_state', 'save_every', 'network']
+Train size:  1000
+Test size:  1000
+Vocab size:  34
+==> building input module
+==> creating parameters for memory module
+==> building episodic memory module (fixed number of steps: 3)
+==> building answer module
+==> collecting all parameters
+==> building loss layer and computing updates
+==> compiling train_fn
+==> compiling test_fn
+==> training
+==> Shuffling the train set
+
+  train loss = 2.71214
+accuracy: 18.70 percent
+
+  test loss = 2.70714
+accuracy: 18.70 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch0.test2.70714.state
+epoch 0 took 30.303s
+==> Shuffling the train set
+
+  train loss = 2.49276
+accuracy: 18.60 percent
+
+  test loss = 2.49498
+accuracy: 18.70 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch1.test2.49498.state
+epoch 1 took 34.778s
+==> Shuffling the train set
+
+  train loss = 2.45522
+accuracy: 18.90 percent
+
+  test loss = 2.52808
+accuracy: 16.90 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch2.test2.52808.state
+epoch 2 took 28.839s
+==> Shuffling the train set
+
+  train loss = 2.24671
+accuracy: 20.90 percent
+
+  test loss = 2.29933
+accuracy: 25.60 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch3.test2.29933.state
+epoch 3 took 33.851s
+==> Shuffling the train set
+
+  train loss = 1.95061
+accuracy: 39.60 percent
+
+  test loss = 1.98597
+accuracy: 41.80 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch4.test1.98597.state
+epoch 4 took 31.616s
+==> Shuffling the train set
+
+  train loss = 1.60709
+accuracy: 58.10 percent
+
+  test loss = 1.85556
+accuracy: 58.10 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch5.test1.85556.state
+epoch 5 took 31.243s
+==> Shuffling the train set
+
+  train loss = 1.38858
+accuracy: 65.30 percent
+
+  test loss = 1.87324
+accuracy: 54.50 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch6.test1.87324.state
+epoch 6 took 28.408s
+==> Shuffling the train set
+
+  train loss = 1.25750
+accuracy: 70.30 percent
+
+  test loss = 1.95683
+accuracy: 58.60 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch7.test1.95683.state
+epoch 7 took 28.765s
+==> Shuffling the train set
+
+  train loss = 1.10949
+accuracy: 74.90 percent
+
+  test loss = 2.14850
+accuracy: 56.50 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch8.test2.14850.state
+epoch 8 took 27.968s
+==> Shuffling the train set
+
+  train loss = 0.96169
+accuracy: 78.70 percent
+
+  test loss = 1.64066
+accuracy: 65.80 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch9.test1.64066.state
+epoch 9 took 30.552s
+==> Shuffling the train set
+
+  train loss = 0.64184
+accuracy: 87.10 percent
+
+  test loss = 1.32171
+accuracy: 75.30 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch10.test1.32171.state
+epoch 10 took 37.779s
+==> Shuffling the train set
+
+  train loss = 0.41865
+accuracy: 92.90 percent
+
+  test loss = 1.06893
+accuracy: 79.30 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch11.test1.06893.state
+epoch 11 took 35.041s
+==> Shuffling the train set
+
+  train loss = 0.35070
+accuracy: 94.00 percent
+
+  test loss = 1.16323
+accuracy: 81.50 percent
+==> saving ... states/dmn_spv.mh3.n40.bs10.babi2.epoch12.test1.16323.state
+epoch 12 took 29.967s
+==> Shuffling the train set
+==> current loss IS NaN. This should never happen :) 
+

@@ -1,0 +1,200 @@
+sudo python view_babi.py --network dmn_spv --memory_hops 3 --babi_id 2 --load_state states/dmn_spv.mh3.n40.bs10.babi2.epoch12.test1.16323.state
+
+@@ correct_1
+==> Training sample
+==> predicting: [{'Q': 'Where is the apple', 'A': 'bedroom', 'C': 'Mary went back to the bathroom . John travelled to the office . Mary moved to the bedroom . Daniel travelled to the bathroom . Daniel went to the hallway . Mary got the milk there . John went to the garden . John travelled to the bedroom . Mary left the milk . John went back to the garden . Daniel travelled to the bathroom . Sandra grabbed the milk there . Sandra left the milk . John travelled to the kitchen . Daniel got the apple there . Mary got the milk there . Mary went to the office . Daniel moved to the bedroom . ', 'S': [14, 17]}]
+[array([14, 17, 18], dtype=int32)]
+Correct!
+...Prediction: bedroom
+...Confidence: 0.994656443596
+[[  1.65359809e-10   1.70389064e-10   1.67670017e-10   1.67145714e-10
+    1.68746725e-10   2.57727741e-08   2.37177111e-10   1.92986266e-10
+    6.51715197e-08   2.60348049e-10   1.96351657e-10   1.10238943e-06
+    1.19229469e-06   6.54357946e-09   9.99987006e-01   1.03569837e-05
+    2.52476042e-07   8.71515082e-10   2.97250957e-09]
+ [  1.76384296e-10   3.36057952e-11   1.18837856e-10   2.69058006e-07
+    6.99832128e-07   3.01071386e-12   9.77839337e-11   1.16309268e-10
+    1.04054623e-12   5.58330535e-11   6.57379132e-06   2.89310069e-12
+    1.72173343e-12   3.26305510e-11   5.77530523e-10   8.54348363e-12
+    3.00504325e-06   9.99989450e-01   9.77858072e-11]
+ [  2.85745711e-12   1.26590648e-11   1.37647825e-12   4.68668073e-13
+    1.58108593e-13   9.10087181e-15   9.70959684e-12   1.09960790e-11
+    5.10374408e-15   8.09609758e-13   1.76900378e-13   1.04990879e-13
+    8.74261736e-14   3.53505982e-14   7.98292469e-15   4.29042813e-15
+    1.33167186e-13   1.36911465e-13   1.00000000e+00]]
+
+@@ correct_2
+==> Test/dev sample
+==> predicting: [{'Q': 'Where is the football', 'A': 'garden', 'C': 'John went back to the garden . Daniel went to the bathroom . Daniel went to the hallway . Daniel grabbed the football there . Daniel travelled to the bathroom . Daniel went to the garden . ', 'S': [3, 5]}]
+[array([3, 5, 6], dtype=int32)]
+Correct!
+...Prediction: garden
+...Confidence: 0.990914821625
+[[  1.21201756e-05   1.16713427e-05   1.17141635e-05   9.99864221e-01
+    1.44100959e-05   1.35397186e-05   7.22992409e-05]
+ [  7.40983808e-08   6.51755545e-04   1.37265380e-02   9.21491051e-07
+    1.78051904e-01   8.07558239e-01   1.05954641e-05]
+ [  1.22578109e-12   2.94053564e-08   7.66862627e-08   2.90987530e-13
+    1.19149746e-07   6.17315976e-08   9.99999762e-01]]
+
+@@ correct 3
+==> Test/dev sample
+==> predicting: [{'Q': 'Where is the milk', 'A': 'hallway', 'C': 'John got the milk there . Sandra went back to the garden . Daniel moved to the garden . Sandra went to the office . John dropped the milk . Daniel travelled to the bedroom . John took the milk there . Sandra went back to the bathroom . John moved to the hallway . Mary went back to the bedroom . Sandra went back to the hallway . John took the football there . Sandra picked up the apple there . Mary travelled to the garden . John discarded the football there . John put down the milk . Mary travelled to the bathroom . Sandra grabbed the football there . Sandra dropped the apple . John took the milk there . John dropped the milk . Daniel went back to the bathroom . ', 'S': [20, 8]}]
+[array([20,  8, 22], dtype=int32)]
+Correct!
+...Prediction: hallway
+...Confidence: 0.975993216038
+[[  1.34191226e-15   1.89492215e-21   1.97015176e-21   2.08860903e-21
+    2.88952508e-11   5.32973909e-17   7.27122390e-11   2.84768780e-21
+    6.98988539e-21   6.10534376e-21   3.59731599e-21   9.28007562e-13
+    6.82631007e-10   5.85959908e-19   3.84329695e-07   1.71405245e-02
+    1.91829278e-11   6.47669363e-10   1.92151546e-07   9.14537609e-02
+    8.91405106e-01   6.15811438e-13   1.29530060e-19]
+ [  5.39376606e-06   6.17985688e-06   4.26119441e-05   5.65928531e-06
+    7.53771246e-06   7.23927542e-06   8.31641410e-06   9.60182933e-06
+    7.92373955e-01   6.19960874e-02   1.52034972e-05   2.89488435e-05
+    4.61298714e-06   1.42795607e-01   1.86447760e-05   2.29058387e-05
+    1.60209090e-03   4.81372172e-06   5.43549004e-06   2.17057765e-04
+    3.60323844e-04   4.54015768e-04   7.79055426e-06]
+ [  1.89641872e-10   3.10331622e-10   5.07109299e-10   7.19371090e-11
+    1.63448994e-11   6.96090269e-11   3.15941960e-11   6.91087049e-11
+    4.60206138e-07   1.55581077e-08   4.82826591e-11   1.97142178e-10
+    1.04921263e-11   4.61689709e-09   2.56985440e-11   2.30614347e-11
+    2.37400044e-10   1.34310557e-11   1.28155628e-11   1.70806303e-11
+    1.64293527e-11   2.18427932e-11   9.99999523e-01]]
+
+@@ wrong_1
+==> Test/dev sample
+==> predicting: [{'Q': 'Where is the football', 'A': 'kitchen', 'C': 'John took the apple there . John dropped the apple . Daniel went back to the bathroom . John grabbed the apple there . Mary travelled to the kitchen . Sandra went back to the garden . John dropped the apple . John took the apple there . John dropped the apple . Daniel travelled to the office . Sandra journeyed to the hallway . John got the apple there . Sandra journeyed to the bathroom . Daniel took the milk there . John discarded the apple . John moved to the kitchen . Daniel left the milk there . Daniel went back to the bathroom . Sandra journeyed to the garden . Mary got the football there . Mary discarded the football . John journeyed to the bathroom . Daniel travelled to the office . Daniel travelled to the bathroom . ', 'S': [20, 4]}]
+[array([20,  4, 24], dtype=int32)]
+Wrong :(
+...Prediction: bathroom
+...Confidence: 0.976611554623
+[[  1.22503769e-19   5.35387895e-19   6.73349979e-21   7.35940109e-19
+    6.48125252e-21   5.25635232e-21   1.06752072e-16   2.62955195e-15
+    7.69552726e-15   4.94539034e-13   1.46547841e-20   4.92100596e-11
+    1.91532928e-20   1.04346387e-09   1.19658026e-07   3.26195118e-06
+    1.60728135e-07   2.48378072e-11   1.30990615e-16   3.05148393e-01
+    6.94847882e-01   5.04508479e-09   1.54244702e-07   7.82690059e-12
+    3.22428185e-20]
+ [  2.30648266e-06   2.15870432e-06   2.45215168e-04   2.51482425e-06
+    1.98448330e-01   2.31521204e-04   3.01399814e-06   5.00852320e-06
+    4.77406411e-06   6.61742306e-05   8.78279970e-04   1.37233983e-05
+    2.07533687e-02   1.94611803e-05   1.73096614e-05   5.08039957e-04
+    1.23370091e-05   2.22981051e-01   3.50903980e-02   1.31015666e-03
+    1.60435520e-04   4.59861383e-02   7.63403904e-03   4.65578794e-01
+    4.54357541e-05]
+ [  1.53163864e-15   1.28546620e-15   3.97445096e-15   8.50435796e-16
+    2.03177251e-14   1.89688678e-13   1.13299709e-15   8.47757107e-16
+    1.00995995e-15   2.52041409e-15   7.12697452e-14   8.42810753e-16
+    2.94744285e-12   1.12305282e-15   1.03673021e-15   1.78191761e-15
+    2.23949751e-15   7.04745981e-15   2.09007291e-13   9.67264615e-16
+    1.52299838e-15   2.11967573e-14   3.63736615e-15   1.17003363e-14
+    1.00000000e+00]]
+
+@@ wrong_2
+==> Training sample
+==> predicting: [{'Q': 'Where is the milk', 'A': 'hallway', 'C': 'Daniel got the football there . Daniel discarded the football . Daniel got the milk there . Daniel grabbed the football there . John moved to the kitchen . Mary went back to the kitchen . Daniel discarded the football . Daniel journeyed to the bedroom . Sandra travelled to the bedroom . Daniel travelled to the hallway . John went to the bedroom . Daniel dropped the milk . John moved to the kitchen . Daniel journeyed to the kitchen . John travelled to the hallway . Sandra travelled to the garden . Sandra journeyed to the kitchen . Daniel moved to the office . Daniel got the apple there . John grabbed the milk there . John left the milk . Sandra travelled to the bedroom . ', 'S': [20, 14]}]
+[array([20, 14, 22], dtype=int32)]
+Wrong :(
+...Prediction: bedroom
+...Confidence: 0.611196696758
+[[  4.31299080e-20   1.31555412e-19   7.79795525e-16   2.98822951e-19
+    5.82872092e-21   5.80329602e-21   7.88800557e-17   1.19923512e-17
+    1.34703933e-19   4.13430395e-20   1.17508800e-19   1.52796986e-06
+    3.01929228e-12   4.69463403e-14   7.71030352e-18   1.74995448e-19
+    1.03836965e-18   3.67910150e-14   2.72298128e-10   2.55977325e-02
+    9.74400759e-01   1.48785673e-09   3.84386307e-19]
+ [  2.27276450e-05   2.26281591e-05   2.26348075e-05   2.26432712e-05
+    2.40159295e-02   7.96144456e-03   2.27403925e-05   1.07128748e-04
+    4.77873691e-05   1.01073331e-03   5.74755967e-01   2.35919360e-05
+    7.71199004e-04   3.12461489e-04   3.88158262e-01   5.52384263e-05
+    1.63090954e-04   1.90966821e-03   2.55593259e-05   1.86398582e-04
+    1.68799699e-04   1.63166245e-04   5.01807481e-05]
+ [  4.39759015e-13   1.16797403e-12   5.33278879e-13   2.12312305e-13
+    2.72105126e-07   2.80011708e-10   2.95330329e-13   2.73089168e-12
+    3.50778052e-11   4.50715333e-12   3.19568073e-07   2.64008325e-13
+    2.22689280e-11   1.09792590e-12   6.30751762e-09   2.46963283e-11
+    1.64868588e-11   2.55367971e-12   1.40842036e-13   5.41489076e-12
+    1.56797990e-12   1.65664843e-11   9.99999464e-01]]
+
+@@ wrong_3
+==> Training sample
+==> predicting: [{'Q': 'Where is the football', 'A': 'office', 'C': 'Sandra moved to the garden . Sandra took the milk there . John travelled to the bedroom . Mary travelled to the bathroom . Sandra dropped the milk . Daniel got the milk there . Daniel dropped the milk . Mary travelled to the office . John moved to the bathroom . John went to the office . Daniel got the milk there . Daniel went to the kitchen . Mary picked up the apple there . Daniel put down the milk . Mary discarded the apple . John took the apple there . John left the apple . Daniel got the football there . Daniel moved to the office . Mary picked up the apple there . ', 'S': [17, 18]}]
+[array([17, 18, 20], dtype=int32)]
+Wrong :(
+...Prediction: kitchen
+...Confidence: 0.96972411871
+[[  4.34236523e-16   2.09648595e-15   7.31842819e-16   4.70489797e-16
+    6.67770706e-15   2.91345012e-14   1.46313168e-14   8.40309267e-13
+    7.91999364e-16   1.18506040e-15   3.37567040e-12   6.11281708e-16
+    5.56621936e-12   2.29568552e-11   1.14519901e-10   6.14885198e-10
+    2.12309947e-09   9.99999642e-01   1.59846167e-07   1.93487679e-07
+    2.75626257e-15]
+ [  1.05343943e-07   6.74300225e-08   7.30264276e-08   1.77309255e-06
+    6.56169661e-08   3.59134816e-07   2.38912520e-07   1.06983684e-07
+    1.60660363e-07   4.63305213e-07   7.05734237e-07   9.02884781e-01
+    1.59235668e-07   6.52289259e-07   1.05235500e-07   7.49866871e-08
+    9.14179807e-08   5.14050635e-06   9.71024930e-02   6.53345126e-07
+    1.72739351e-06]
+ [  1.92836427e-10   7.78463752e-12   1.69392486e-11   5.07864237e-11
+    2.06092261e-12   3.56065568e-12   3.15984131e-12   1.48845270e-12
+    9.95936233e-12   2.34352468e-11   4.59417573e-12   2.30973018e-09
+    8.98610721e-13   2.19413355e-12   1.19673564e-12   1.03215841e-12
+    1.18449987e-12   2.18595454e-12   9.84937912e-12   8.95992156e-13
+    1.00000000e+00]]
+
+@@ wrong_4
+==> Test/dev sample
+==> predicting: [{'Q': 'Where is the football', 'A': 'hallway', 'C': 'John went back to the office . Daniel journeyed to the garden . Mary took the apple there . John went back to the hallway . Mary grabbed the milk there . Daniel moved to the bedroom . Mary dropped the apple there . Sandra grabbed the football there . Mary travelled to the garden . Mary went back to the hallway . Sandra went back to the kitchen . Sandra went back to the hallway . Sandra put down the football . Sandra went to the garden . Mary picked up the football there . Sandra moved to the hallway . Sandra journeyed to the kitchen . Daniel journeyed to the bathroom . Sandra went to the office . Sandra journeyed to the bathroom . Mary went to the bathroom . Mary moved to the bedroom . Mary went to the hallway . Daniel went to the office . Daniel journeyed to the bathroom . Daniel went back to the garden . Mary discarded the football . Daniel went to the bathroom . ', 'S': [26, 22]}]
+[array([26, 22, 28], dtype=int32)]
+Wrong :(
+...Prediction: bathroom
+...Confidence: 0.634515404701
+[[  3.22585268e-22   2.86777596e-22   5.76907586e-21   3.09034278e-22
+    8.30629649e-21   7.90611040e-22   2.23773630e-19   4.44938617e-12
+    3.32951122e-21   2.20679267e-21   4.75018312e-22   3.47124042e-22
+    1.40505691e-07   1.32690408e-17   3.33649543e-04   1.64264751e-21
+    5.16076409e-21   3.57493761e-19   1.95890405e-19   3.10699923e-21
+    3.32179025e-18   4.14392288e-16   9.80830404e-18   1.09356231e-15
+    7.02119755e-15   7.88649560e-16   9.99666214e-01   4.97455588e-09
+    1.77361357e-21]
+ [  5.52302315e-10   2.41594433e-09   6.53903806e-11   4.10701118e-09
+    4.01830132e-11   3.91148491e-09   5.15539070e-11   3.99016681e-10
+    4.71661333e-05   6.10808347e-05   6.10464701e-09   4.60081040e-09
+    1.73102185e-10   5.21073673e-09   5.07176967e-10   3.76871911e-09
+    9.95416904e-09   1.93334745e-05   7.79969014e-08   5.88755995e-08
+    7.79563515e-03   2.58021802e-03   6.23698086e-02   3.38748544e-01
+    3.42425376e-01   2.45833814e-01   8.39623571e-09   1.18847354e-04
+    4.21818774e-10]
+ [  1.42093829e-13   1.54443418e-12   8.97877794e-16   1.76645045e-14
+    5.20213067e-16   4.54991540e-14   4.29706802e-16   6.98878573e-16
+    4.35150776e-14   5.59264989e-14   1.83667946e-12   1.04725928e-12
+    7.31469119e-16   1.54137879e-13   4.70150878e-16   6.99154276e-13
+    8.21006674e-13   4.05873089e-13   1.32491119e-11   7.17911234e-12
+    2.63715178e-12   1.84590814e-13   1.33844335e-12   8.35964891e-12
+    5.21933538e-12   1.88025658e-12   6.09117115e-16   5.26904197e-14
+    1.00000000e+00]]
+
+@@ wrong_5
+==> Test/dev sample
+==> predicting: [{'Q': 'Where is the football', 'A': 'garden', 'C': 'Sandra moved to the bathroom . Mary journeyed to the office . Daniel took the apple there . Mary journeyed to the garden . Mary got the football there . John went to the bathroom . Sandra journeyed to the office . Daniel travelled to the bedroom . Daniel discarded the apple . Daniel moved to the bathroom . Sandra travelled to the kitchen . Sandra picked up the milk there . John went back to the bedroom . John got the apple there . Sandra left the milk there . Sandra journeyed to the hallway . Mary discarded the football . Sandra travelled to the garden . ', 'S': [16, 3]}]
+[array([16,  3, 18], dtype=int32)]
+Wrong :(
+...Prediction: bathroom
+...Confidence: 0.985290765762
+[[  2.12605352e-18   2.26266282e-18   1.65937080e-17   2.35269832e-18
+    3.81390991e-13   3.47618723e-18   2.17195109e-18   2.38741530e-18
+    5.64493673e-15   4.59144797e-18   2.43223794e-18   4.16238306e-13
+    4.21134293e-17   5.47668244e-10   1.09410661e-10   3.37950843e-18
+    1.00000000e+00   2.56002441e-10   1.36263050e-17]
+ [  4.69213468e-04   1.93945900e-01   1.54747293e-04   5.43007739e-02
+    3.90362198e-04   6.64442420e-01   1.12170109e-03   2.15405133e-03
+    1.58595401e-04   2.46441830e-03   1.05582492e-03   1.56606053e-04
+    7.58136809e-02   4.34932619e-04   1.52418506e-04   1.13133574e-03
+    3.46573390e-04   7.36722024e-04   5.69748692e-04]
+ [  5.09532638e-09   9.30851837e-12   5.83390012e-14   8.08892363e-12
+    3.59447715e-14   4.52039066e-11   1.23555743e-09   9.84965690e-13
+    1.28031686e-13   5.18889707e-14   3.01924479e-12   3.12823118e-13
+    2.61543196e-12   3.30900062e-14   3.61597444e-13   3.42077165e-11
+    7.69533024e-14   8.49440483e-12   1.00000000e+00]]

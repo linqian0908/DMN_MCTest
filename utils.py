@@ -2,19 +2,42 @@ import os as os
 import numpy as np
 import sys
 
+def get_dmn(network,batch_size,args_dict):
+    # init class
+    if network == 'dmn_batch':
+        import dmn_batch
+        dmn = dmn_batch.DMN_batch(**args_dict)
+    else:
+        if (batch_size != 1):
+            print "==> no minibatch training, argument batch_size is useless"
+            batch_size = 1
+            
+        if network == 'dmn_basic':
+            import dmn_basic
+            dmn = dmn_basic.DMN_basic(**args_dict)
+        elif network == 'dmn_smooth':
+            import dmn_smooth
+            dmn = dmn_smooth.DMN_smooth(**args_dict)
+        elif network == 'dmn_spv':
+            import dmn_spv
+            dmn = dmn_spv.DMN(**args_dict)
+        else: 
+            raise Exception("No such network known: " + network)
+    return dmn, batch_size
+    
 def init_babi(fname):
     #print "==> Loading test from %s" % fname
     tasks = []
     task = None
     seq_count = 0
     err_count = 0
-    q_count = 1
+    q_count = 0
     for i, line in enumerate(open(fname)):
         id = int(line[0:line.find(' ')])
         if id == 1:
             task = {"C": "", "Q": "", "A": "", "S":[]}
             seq_count = 0
-            q_count = 1
+            q_count = 0
             
         line = line.strip()
         line = line.replace('.', ' . ')
@@ -28,9 +51,9 @@ def init_babi(fname):
             task["Q"] = line[:idx]
             task["A"] = tmp[1].strip()
             task["S"] = [int(w)-q_count for w in tmp[2].split(" ")]
+            print task["S"]
             tasks.append(task.copy())            
-            q_count += 1
-            
+            q_count += 1           
     return tasks
     
 def get_babi_raw(id, test_id):

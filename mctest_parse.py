@@ -9,7 +9,7 @@ import codecs
 def only_words(line):
     ps = re.sub(r'[^a-zA-Z0-9\']', r' ', line)
     ws = re.sub(r'(\W)', r' \1 ', ps) # Put spaces around punctuations
-    ws = re.sub(r" ' ", r"'", ws) # Remove spaces around '
+    #ws = re.sub(r" ' ", r"'", ws) # Remove spaces around '
     # ns = re.sub(r'(\d+)', r' <number> ', ws) # Put spaces around numbers
     hs = re.sub(r'-', r' ', ws) # Replace hyphens with space
     rs = re.sub(r' +', r' ', hs) # Reduce multiple spaces into 1
@@ -19,7 +19,7 @@ def only_words(line):
 def clean_sentence(line):
     ps = re.sub(r'[^a-zA-Z0-9\.\?\!\']', ' ', line) # Split on punctuations and hex characters
     ws = re.sub(r'(\W)', r' \1 ', ps) # Put spaces around punctuations
-    ws = re.sub(r" ' ", r"'", ws) # Remove spaces around '
+    #ws = re.sub(r" ' ", r"'", ws) # Remove spaces around '
     # ns = re.sub(r'(\d+)', r' <number> ', ws) # Put spaces around numbers
     hs = re.sub(r'-', r' ', ws) # Replace hyphens with space
     rs = re.sub(r' +', r' ', hs) # Reduce multiple spaces into 1
@@ -30,7 +30,7 @@ def get_sentences(line):
     ps = re.sub(r'[^a-zA-Z0-9\.\?\!\']', ' ', line) # Split on punctuations and hex characters
     s = re.sub(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?|\!)\s', '\t', ps) # Split on sentences
     ws = re.sub(r'(\W)', r' \1 ', s) # Put spaces around punctuations
-    ws = re.sub(r" ' ", r"'", ws) # Remove spaces around '
+    #ws = re.sub(r" ' ", r"'", ws) # Remove spaces around '
     # ns = re.sub(r'(\d+)', r' <number> ', ws) # Put spaces around numbers
     hs = re.sub(r'-', r' ', ws) # Replace hyphens with space
     rs = re.sub(r' +', r' ', hs) # Reduce multiple spaces into 1
@@ -186,22 +186,24 @@ def build_mc(id):
     
     return train_obj['idata'], dev_obj['idata'], test_obj['idata'], train_obj['wdata'], dev_obj['wdata'], test_obj['wdata'], test_obj['vocab']
     
-#Given a word-to-id dictionary, return embedding initialized to Glove. word not found in Glove will be initialized to 0
+#Given a word-to-id dictionary, return embedding initialized to Glove. word not found in Glove will be initialized to random
 def build_embedding(word_to_id, vocab_dim):
     vector_file = "data/glove/glove.6B." + str(vocab_dim) + "d.txt"
     n_words = len(word_to_id)
-    embedding_weights = np.zeros((n_words, vocab_dim),dtype=np.float32)
-    print 'Loading glove... total words: {}'.format(n_words)
-    found_word = 0
+    embedding_weights = np.random.uniform(0.0,1.0,(n_words, vocab_dim)).astype(np.float32)
+    found = np.zeros(n_words)
     with codecs.open(vector_file, 'r', 'utf-8') as f:
         for c, r in enumerate(f):
             sr = r.split()
             if sr[0] in word_to_id:
                 embedding_weights[word_to_id[sr[0]]] = np.array([float(i) for i in sr[1:]])
-                found_word += 1
-            else:
-                print sr[0]
-    print 'Words loaded from glove: {}'.format(found_word)
+                found[word_to_id[sr[0]]] = 1
+    for w in word_to_id:
+        if not found[word_to_id[w]]:
+            print w
+    
+    print 'Loading glove... total words: {}'.format(n_words)
+    print 'Words loaded from glove: {}'.format(np.sum(found))
     return embedding_weights
 
 def read_embedding(id,dim):
@@ -210,7 +212,7 @@ def read_embedding(id,dim):
     f = file(os.path.join(data_dir, id+'.'+str(dim)+'d.pickle'), 'rb')
     embed = cPickle.load(f)
     return np.array(embed,dtype=np.float32)
-     
+
 if __name__ == "__main__":    
     data_dir = "data/MCTest"
     dataset = sys.argv[1]

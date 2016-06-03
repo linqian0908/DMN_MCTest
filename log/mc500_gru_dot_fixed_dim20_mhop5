@@ -1,0 +1,171 @@
+==> parsing input arguments
+Namespace(answer_module='feedforward', batch_norm=False, batch_size=10, dim=20, dropout=0, epochs=30, id='mc500', input_mask_mode='sentence', l2=0.001, load_embed=True, load_state='', log_every=500, lr=1.0, memory_hops=5, mode='train', network='gru_dot_fix', normalize_attention=False, prefix='', save_every=1, word_vector_size=50)
+Train file: mc500.train.tsv
+Parsing questions data/MCTest/mc500.train.tsv data/MCTest/mc500.train.ans
+There are 1200 tasks
+There are 3694 words
+Parsing questions data/MCTest/mc500.dev.tsv data/MCTest/mc500.dev.ans
+There are 200 tasks
+There are 3938 words
+Parsing questions data/MCTest/mc500.test.tsv data/MCTest/mc500.test.ans
+There are 600 tasks
+There are 4440 words
+Loading pickled embedding
+==> no minibatch training, argument batch_size is useless
+==> model: GRU, dot similarity, fixed embedding
+==> not used params in DMN class: ['load_state', 'network', 'save_every', 'batch_size', 'lr', 'epochs', 'prefix', 'answer_module', 'log_every', 'load_embed', 'id', 'batch_norm']
+max statement length is 676
+max question length is 23
+max Tc length is 55
+max statement length is 478
+max question length is 19
+max Tc length is 59
+max statement length is 395
+max question length is 22
+max Tc length is 44
+==> embedding layer
+==> building input module
+==> creating parameters for memory module
+==> building episodic memory module (fixed number of steps: 5)
+==> building options module
+==> building answer module
+==> collecting all parameters
+==> building loss layer and computing updates
+==> compiling train_fn
+==> compiling test_fn
+==> computing gradients (for debugging)
+==> training
+  training: 0.499 / 1200 	 loss: 1.431 	 avg_loss: 1.424 	 skipped: 0 	 pn: 8.361 	 gn: 0.067 	 time: 265.79s
+  training: 0.999 / 1200 	 loss: 1.128 	 avg_loss: 1.405 	 skipped: 0 	 pn: 7.857 	 gn: 0.871 	 time: 261.77s
+
+train loss = 1.40080
+accuracy: 30.75 percent
+confusion matrix: [[80 80 66 62], [63 92 65 63], [84 71 95 53], [ 75  63  86 102]]
+
+dev loss = 1.33674
+accuracy: 35.50 percent
+confusion matrix: [[16 10 15 14], [ 8 21 11 10], [11 14 19 11], [ 8  7 10 15]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch0.test1.33674.state
+epoch 0 took 647.141s
+  training: 1.499 / 1200 	 loss: 1.525 	 avg_loss: 1.350 	 skipped: 0 	 pn: 7.613 	 gn: 0.393 	 time: 268.70s
+  training: 1.999 / 1200 	 loss: 1.244 	 avg_loss: 1.345 	 skipped: 0 	 pn: 7.787 	 gn: 4.875 	 time: 269.43s
+
+train loss = 1.34568
+accuracy: 36.67 percent
+confusion matrix: [[89 69 70 60], [ 61 111  53  58], [ 67  62 124  50], [ 66  61  83 116]]
+
+dev loss = 1.31815
+accuracy: 40.50 percent
+confusion matrix: [[16 11 15 13], [ 8 25 11  6], [11 14 22  8], [10  4  8 18]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch1.test1.31815.state
+epoch 1 took 654.410s
+  training: 2.499 / 1200 	 loss: 1.546 	 avg_loss: 1.317 	 skipped: 0 	 pn: 8.086 	 gn: 0.537 	 time: 219.30s
+  training: 2.999 / 1200 	 loss: 1.408 	 avg_loss: 1.318 	 skipped: 0 	 pn: 8.479 	 gn: 6.910 	 time: 155.99s
+
+train loss = 1.32069
+accuracy: 38.08 percent
+confusion matrix: [[93 64 71 60], [ 53 120  53  57], [ 64  63 126  50], [ 69  63  76 118]]
+
+dev loss = 1.31518
+accuracy: 39.00 percent
+confusion matrix: [[13 17 15 10], [ 8 26  9  7], [12 12 22  9], [ 8  5 10 17]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch2.test1.31518.state
+epoch 2 took 446.049s
+  training: 3.499 / 1200 	 loss: 1.584 	 avg_loss: 1.293 	 skipped: 0 	 pn: 9.061 	 gn: 0.743 	 time: 150.72s
+  training: 3.999 / 1200 	 loss: 1.476 	 avg_loss: 1.298 	 skipped: 0 	 pn: 9.571 	 gn: 7.087 	 time: 134.31s
+
+train loss = 1.30247
+accuracy: 40.83 percent
+confusion matrix: [[106  54  66  62], [ 54 122  53  54], [ 69  54 128  52], [ 60  57  75 134]]
+
+dev loss = 1.31860
+accuracy: 36.00 percent
+confusion matrix: [[12 19 15  9], [ 8 21 11 10], [15 10 20 10], [ 8  6  7 19]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch3.test1.31860.state
+epoch 3 took 350.867s
+  training: 4.499 / 1200 	 loss: 1.634 	 avg_loss: 1.267 	 skipped: 0 	 pn: 10.582 	 gn: 1.065 	 time: 149.08s
+  training: 4.999 / 1200 	 loss: 1.472 	 avg_loss: 1.277 	 skipped: 0 	 pn: 11.181 	 gn: 7.894 	 time: 189.17s
+
+train loss = 1.28377
+accuracy: 42.50 percent
+confusion matrix: [[107  58  57  66], [ 46 120  63  54], [ 55  49 144  55], [ 61  55  71 139]]
+
+dev loss = 1.32657
+accuracy: 36.00 percent
+confusion matrix: [[13 19 14  9], [ 7 21 12 10], [14  8 20 13], [10  5  7 18]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch4.test1.32657.state
+epoch 4 took 419.908s
+  training: 5.499 / 1200 	 loss: 1.677 	 avg_loss: 1.241 	 skipped: 0 	 pn: 12.858 	 gn: 1.501 	 time: 161.64s
+  training: 5.999 / 1200 	 loss: 1.500 	 avg_loss: 1.259 	 skipped: 0 	 pn: 13.389 	 gn: 14.127 	 time: 179.55s
+
+train loss = 1.26721
+accuracy: 44.42 percent
+confusion matrix: [[122  53  55  58], [ 44 120  70  49], [ 51  48 146  58], [ 58  56  67 145]]
+
+dev loss = 1.34293
+accuracy: 36.00 percent
+confusion matrix: [[15 19 12  9], [10 19  9 12], [14  8 20 13], [10  5  7 18]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch5.test1.34293.state
+epoch 5 took 364.287s
+  training: 6.499 / 1200 	 loss: 1.707 	 avg_loss: 1.211 	 skipped: 0 	 pn: 15.139 	 gn: 2.129 	 time: 50.76s
+  training: 6.999 / 1200 	 loss: 1.601 	 avg_loss: 1.240 	 skipped: 0 	 pn: 15.944 	 gn: 35.392 	 time: 60.90s
+
+train loss = 1.25054
+accuracy: 47.08 percent
+confusion matrix: [[131  50  52  55], [ 42 129  63  49], [ 50  46 149  58], [ 55  55  60 156]]
+
+dev loss = 1.36589
+accuracy: 35.50 percent
+confusion matrix: [[14 22 12  7], [ 9 19 13  9], [13  9 20 13], [ 8  7  7 18]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch6.test1.36589.state
+epoch 6 took 138.233s
+  training: 7.499 / 1200 	 loss: 1.813 	 avg_loss: 1.193 	 skipped: 0 	 pn: 17.598 	 gn: 4.335 	 time: 54.79s
+  training: 7.999 / 1200 	 loss: 1.172 	 avg_loss: 1.220 	 skipped: 0 	 pn: 18.216 	 gn: 26.600 	 time: 52.15s
+
+train loss = 1.22742
+accuracy: 48.67 percent
+confusion matrix: [[132  53  49  54], [ 41 148  50  44], [ 46  49 153  55], [ 56  56  63 151]]
+
+dev loss = 1.37874
+accuracy: 35.50 percent
+confusion matrix: [[16 20 11  8], [ 9 18 13 10], [11 11 21 12], [ 9  8  7 16]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch7.test1.37874.state
+epoch 7 took 137.872s
+  training: 8.499 / 1200 	 loss: 1.863 	 avg_loss: 1.170 	 skipped: 0 	 pn: 19.998 	 gn: 5.760 	 time: 63.62s
+  training: 8.999 / 1200 	 loss: 1.214 	 avg_loss: 1.201 	 skipped: 0 	 pn: 20.684 	 gn: 23.425 	 time: 65.26s
+
+train loss = 1.20765
+accuracy: 50.33 percent
+confusion matrix: [[139  51  46  52], [ 40 146  50  47], [ 46  47 154  56], [ 48  56  57 165]]
+
+dev loss = 1.39321
+accuracy: 32.50 percent
+confusion matrix: [[16 19 12  8], [10 18 12 10], [10 11 18 16], [11  8  8 13]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch8.test1.39321.state
+epoch 8 took 158.861s
+  training: 9.499 / 1200 	 loss: 1.910 	 avg_loss: 1.140 	 skipped: 0 	 pn: 22.417 	 gn: 6.545 	 time: 64.03s
+  training: 9.999 / 1200 	 loss: 0.847 	 avg_loss: 1.176 	 skipped: 0 	 pn: 23.144 	 gn: 25.664 	 time: 70.04s
+
+train loss = 1.18301
+accuracy: 52.58 percent
+confusion matrix: [[149  45  44  50], [ 42 149  49  43], [ 43  45 164  51], [ 49  56  52 169]]
+
+dev loss = 1.42177
+accuracy: 30.00 percent
+confusion matrix: [[13 17 13 12], [10 15 13 12], [10 12 18 15], [10  9  7 14]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch9.test1.42177.state
+epoch 9 took 164.614s
+  training: 10.499 / 1200 	 loss: 1.932 	 avg_loss: 1.137 	 skipped: 0 	 pn: 24.636 	 gn: 7.723 	 time: 70.42s
+  training: 10.999 / 1200 	 loss: 0.674 	 avg_loss: 1.156 	 skipped: 0 	 pn: 25.436 	 gn: 26.056 	 time: 80.67s
+
+train loss = 1.16369
+accuracy: 53.67 percent
+confusion matrix: [[157  48  37  46], [ 42 151  46  44], [ 46  43 165  49], [ 49  51  55 171]]
+
+dev loss = 1.46979
+accuracy: 29.00 percent
+confusion matrix: [[15 13 15 12], [11 13 13 13], [11 11 18 15], [10 11  7 12]]
+==> saving ... states/gru_dot_fix.mh5.n20.bs10.mc500.epoch10.test1.46979.state
+epoch 10 took 179.524s
+  training: 11.499 / 1200 	 loss: 1.982 	 avg_loss: 1.111 	 skipped: 0 	 pn: 26.959 	 gn: 10.429 	 time: 53.52s
+  training: 11.999 / 1

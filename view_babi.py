@@ -10,6 +10,7 @@ import utils
 import nn_utils
 import mctest_parse
 import cPickle
+import pylab as plt
 
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
@@ -50,25 +51,8 @@ args_dict['babi_test_raw'] = babi_test_raw
 args_dict['word2vec'] = word2vec
 
 # init class
-if args.network == 'dmn_batch':
-    import dmn_batch
-    dmn = dmn_batch.DMN_batch(**args_dict)
-
-elif args.network == 'dmn_basic':
-    import dmn_basic
-    if (args.batch_size != 1):
-        print "==> no minibatch training, argument batch_size is useless"
-        args.batch_size = 1
-    dmn = dmn_basic.DMN_basic(**args_dict)
-
-elif args.network == 'dmn_smooth':
-    import dmn_smooth
-    if (args.batch_size != 1):
-        print "==> no minibatch training, argument batch_size is useless"
-        args.batch_size = 1
-    dmn = dmn_smooth.DMN_smooth(**args_dict)
-else: 
-    raise Exception("No such network known: " + args.network)
+dmn, batch_size = utils.get_dmn(args.network,args.batch_size,args_dict)
+args.batch_size = batch_size
     
 if (args.batch_size != 1):
         print "==> no minibatch training, argument batch_size is useless"
@@ -89,6 +73,9 @@ while not input_str=="exit":
     print '...Prediction: {}'.format(ans)
     print '...Confidence: {}'.format(prob.max())
     print attentions
+    plt.figure(0)
+    plt.imshow(attentions)
+    plt.show()
     
     print "==> Test/dev sample"
     n = random.randint(0,len(babi_test_raw)-1)
@@ -100,5 +87,8 @@ while not input_str=="exit":
     print '...Prediction: {}'.format(ans)
     print '...Confidence: {}'.format(prob.max())
     print attentions
+    plt.figure(1)
+    plt.imshow(attentions)
+    plt.show()
     
     input_str = raw_input("Press ENTER to continue. Type exit to stop: ")

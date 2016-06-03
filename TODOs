@@ -1,5 +1,5 @@
 1. new DMN baseline: train LSTM language model to general answer sentence with <EOS> tag
-2. supervised gate training on DMN Babi. 
+2. supervised gate training on DMN Babi. [X]
 3. run supervised/unsupervised on all babi
 4. transfer sueprvised attention model to DMN
 5. retrain GloVe on DMN corpas to better represent unknown wordss

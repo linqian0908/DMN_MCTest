@@ -10,7 +10,6 @@ import nn_utils
 
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
-
 parser.add_argument('--network', type=str, default="dmn_batch", help='network type: dmn_basic, dmn_smooth, dmn_spv, or dmn_batch')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
@@ -24,7 +23,7 @@ parser.add_argument('--batch_size', type=int, default=10, help='no commment')
 parser.add_argument('--babi_id', type=str, default="1", help='babi task ID')
 parser.add_argument('--l2', type=float, default=0, help='L2 regularization')
 parser.add_argument('--normalize_attention', type=bool, default=False, help='flag for enabling softmax on attention vector')
-parser.add_argument('--log_every', type=int, default=500, help='print information every x iteration')
+parser.add_argument('--log_every', type=int, default=2000, help='print information every x iteration')
 parser.add_argument('--save_every', type=int, default=1, help='save state every x epoch')
 parser.add_argument('--prefix', type=str, default="", help='optional prefix of network name')
 parser.add_argument('--no-shuffle', dest='shuffle', action='store_false')
@@ -58,27 +57,8 @@ args_dict['babi_train_raw'] = babi_train_raw
 args_dict['babi_test_raw'] = babi_test_raw
 args_dict['word2vec'] = word2vec
     
-
-# init class
-if args.network == 'dmn_batch':
-    import dmn_batch
-    dmn = dmn_batch.DMN_batch(**args_dict)
-else:
-    if (args.batch_size != 1):
-        print "==> no minibatch training, argument batch_size is useless"
-        args.batch_size = 1
-        
-    if args.network == 'dmn_basic':
-        import dmn_basic
-        dmn = dmn_basic.DMN_basic(**args_dict)
-    elif args.network == 'dmn_smooth':
-        import dmn_smooth
-        dmn = dmn_smooth.DMN_smooth(**args_dict)
-    elif args.network == 'dmn_spv':
-        import dmn_smooth_spv
-        dmn = dmn_smooth_spv.DMN(**args_dict)
-    else: 
-        raise Exception("No such network known: " + args.network)
+dmn, batch_size = utils.get_dmn(args.network,args.batch_size,args_dict)
+args.batch_size = batch_size
     
 if args.load_state != "":
     dmn.load_state(args.load_state)
@@ -121,8 +101,6 @@ def do_epoch(mode, epoch):
 
     avg_loss /= batches_per_epoch
     print "\n  %s loss = %.5f" % (mode, avg_loss)
-    print "confusion matrix:"
-    print metrics.confusion_matrix(y_true, y_pred)
     
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)

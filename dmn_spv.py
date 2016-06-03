@@ -201,7 +201,8 @@ class DMN:
             sequences=self.inp_c,
             non_sequences=[mem, self.q_q],
             outputs_info=T.zeros_like(self.inp_c[0][0])) 
-        g = nn_utils.softmax(g)
+        #g = nn_utils.softmax(g)
+        g=g/g.sum()
         
         e = T.dot(g,self.inp_c)
         return e, g
@@ -275,7 +276,7 @@ class DMN:
             
             gate = x["S"]
             for i in xrange(len(gate),self.memory_hops):
-                gate.append(len(mask)-1)      
+                gate.append(len(mask)-1)
             gates.append(np.array(gate,dtype=np.int32))
             
         return inputs, questions, answers, input_masks, gates
@@ -337,6 +338,7 @@ class DMN:
         #data[0]["A"] = "."
         print "==> predicting:", data
         inputs, questions, answers, input_masks, gates = self._process_input(data)
+        print gates
         probabilities, loss, attentions = self.test_fn(inputs[0], questions[0], answers[0], input_masks[0], gates[0])
         ans = self.ivocab[probabilities.argmax()]
         return ans, probabilities, attentions

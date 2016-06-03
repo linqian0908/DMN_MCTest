@@ -85,6 +85,8 @@ view_babi and view_mc can visualize attention gate over episode. Need to load fr
     
     python view_mc.py --network gru_dot_fix --id mc160 --load_state states/gru_dot_fix.mh3.n40.bs10.d0.3.mc160.epoch25.test5.22941.state
     
+    sudo python view_babi.py --network dmn_spv --memory_hops 5 --babi_id 3 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch29.test7.27444.state
+
 ## Roadmap
 
 Supervised training on babi

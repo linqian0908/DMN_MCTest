@@ -26,8 +26,9 @@ class DMN:
         self.word2vec = word2vec      
         self.word_vector_size = word_vector_size
         # add eng_of_sentence tag for answer generation
-        self.end_tag = len(word2vec)
-        self.vocab_size = self.end_tag+1
+        #self.end_tag = len(word2vec)
+        #self.vocab_size = self.end_tag+1
+        self.vocab_size = len(word2vec)
         
         self.dim = dim # hidden state size
         self.mode = mode
@@ -287,13 +288,16 @@ class DMN:
         maxq = 0
         maxTc = 0
         max_n = []
+        count_one = 0
         for x in data_raw:
             inputs.append(np.vstack([self.word2vec[w] for s in x["C"] for w in s]).astype(np.float32)) #(seq_len, embed)
             maxst = max(maxst,len(inputs[-1]))
             questions.append(np.vstack([self.word2vec[w] for w in x["Q"]]).astype(np.float32)) #(q_len, embed)
             maxq = max(maxq,len(questions[-1]))
             option = [w for w in x["O"][x["A"]]]
-            option.append(self.end_tag)
+            if len(option)==1:
+                count_one += 1
+            #option.append(self.end_tag)
             max_n.append(len(option))
             answers.append(np.array(option,dtype=np.int32)) # (ans_len)
             
@@ -310,6 +314,7 @@ class DMN:
         print("max question length is {}".format(maxq))
         print("max Tc length is {}".format(maxTc))
         print("max answer length is {}".format(max(max_n)))
+        print("one-word answer: {}".format(count_one))
         return inputs, questions, answers, input_masks, max_n
 
     def get_batches_per_epoch(self, mode):

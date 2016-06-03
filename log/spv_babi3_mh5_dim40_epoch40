@@ -1,0 +1,434 @@
+  test loss = 3.01009
+accuracy: 22.50 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch0.test3.01009.state
+epoch 0 took 186.655s
+==> Shuffling the train set
+  training: 1.999/1000,  loss: 3.741,  avg_loss: 2.697,  pn: 41.719,  time: 177.18s
+
+  train loss = 2.69698
+accuracy: 23.20 percent
+  testing: 1.999/1000,  loss: 2.358,  avg_loss: 2.661,  pn: 41.719,  time: 17.88s
+
+  test loss = 2.66091
+accuracy: 24.10 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch1.test2.66091.state
+epoch 1 took 195.065s
+==> Shuffling the train set
+  training: 2.999/1000,  loss: 2.272,  avg_loss: 2.557,  pn: 33.301,  time: 170.17s
+
+  train loss = 2.55739
+accuracy: 22.20 percent
+  testing: 2.999/1000,  loss: 2.433,  avg_loss: 2.537,  pn: 33.301,  time: 17.17s
+
+  test loss = 2.53700
+accuracy: 21.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch2.test2.53700.state
+epoch 2 took 187.339s
+==> Shuffling the train set
+  training: 3.999/1000,  loss: 2.415,  avg_loss: 2.492,  pn: 27.623,  time: 169.66s
+
+  train loss = 2.49180
+accuracy: 23.60 percent
+  testing: 3.999/1000,  loss: 2.565,  avg_loss: 2.536,  pn: 27.623,  time: 17.49s
+
+  test loss = 2.53573
+accuracy: 21.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch3.test2.53573.state
+epoch 3 took 187.152s
+==> Shuffling the train set
+  training: 4.999/1000,  loss: 1.145,  avg_loss: 2.466,  pn: 26.140,  time: 175.39s
+
+  train loss = 2.46551
+accuracy: 22.20 percent
+  testing: 4.999/1000,  loss: 1.774,  avg_loss: 2.578,  pn: 26.140,  time: 17.67s
+
+  test loss = 2.57820
+accuracy: 22.70 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch4.test2.57820.state
+epoch 4 took 193.067s
+==> Shuffling the train set
+  training: 5.999/1000,  loss: 2.151,  avg_loss: 2.442,  pn: 25.343,  time: 178.34s
+
+  train loss = 2.44220
+accuracy: 25.20 percent
+  testing: 5.999/1000,  loss: 2.418,  avg_loss: 2.510,  pn: 25.343,  time: 17.87s
+
+  test loss = 2.50989
+accuracy: 21.20 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch5.test2.50989.state
+epoch 5 took 196.218s
+==> Shuffling the train set
+  training: 6.999/1000,  loss: 2.379,  avg_loss: 2.424,  pn: 26.347,  time: 173.84s
+
+  train loss = 2.42426
+accuracy: 25.00 percent
+  testing: 6.999/1000,  loss: 2.455,  avg_loss: 2.483,  pn: 26.347,  time: 17.46s
+
+  test loss = 2.48293
+accuracy: 24.90 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch6.test2.48293.state
+epoch 6 took 191.303s
+==> Shuffling the train set
+  training: 7.999/1000,  loss: 2.382,  avg_loss: 2.400,  pn: 27.847,  time: 167.93s
+
+  train loss = 2.40008
+accuracy: 26.30 percent
+  testing: 7.999/1000,  loss: 2.292,  avg_loss: 2.457,  pn: 27.847,  time: 16.86s
+
+  test loss = 2.45695
+accuracy: 25.60 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch7.test2.45695.state
+epoch 7 took 184.794s
+==> Shuffling the train set
+  training: 8.999/1000,  loss: 2.626,  avg_loss: 2.389,  pn: 28.530,  time: 182.25s
+
+  train loss = 2.38914
+accuracy: 27.40 percent
+  testing: 8.999/1000,  loss: 2.491,  avg_loss: 2.526,  pn: 28.530,  time: 17.75s
+
+  test loss = 2.52593
+accuracy: 24.20 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch8.test2.52593.state
+epoch 8 took 200.007s
+==> Shuffling the train set
+  training: 9.999/1000,  loss: 3.166,  avg_loss: 2.360,  pn: 30.950,  time: 170.75s
+
+  train loss = 2.35950
+accuracy: 32.50 percent
+  testing: 9.999/1000,  loss: 2.298,  avg_loss: 2.493,  pn: 30.950,  time: 16.14s
+
+  test loss = 2.49297
+accuracy: 31.60 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch9.test2.49297.state
+epoch 9 took 186.891s
+==> Shuffling the train set
+  training: 10.999/1000,  loss: 1.755,  avg_loss: 2.326,  pn: 34.440,  time: 175.01s
+
+  train loss = 2.32566
+accuracy: 37.90 percent
+  testing: 10.999/1000,  loss: 2.617,  avg_loss: 2.356,  pn: 34.440,  time: 16.80s
+
+  test loss = 2.35579
+accuracy: 35.00 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch10.test2.35579.state
+epoch 10 took 191.816s
+==> Shuffling the train set
+  training: 11.999/1000,  loss: 3.369,  avg_loss: 2.276,  pn: 34.603,  time: 169.24s
+
+  train loss = 2.27615
+accuracy: 40.00 percent
+  testing: 11.999/1000,  loss: 2.951,  avg_loss: 2.373,  pn: 34.603,  time: 16.91s
+
+  test loss = 2.37259
+accuracy: 35.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch11.test2.37259.state
+epoch 11 took 186.159s
+==> Shuffling the train set
+  training: 12.999/1000,  loss: 1.425,  avg_loss: 2.240,  pn: 35.171,  time: 162.96s
+
+  train loss = 2.24009
+accuracy: 41.80 percent
+  testing: 12.999/1000,  loss: 2.470,  avg_loss: 2.405,  pn: 35.171,  time: 16.52s
+
+  test loss = 2.40465
+accuracy: 37.40 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch12.test2.40465.state
+epoch 12 took 179.486s
+==> Shuffling the train set
+  training: 13.999/1000,  loss: 3.593,  avg_loss: 2.198,  pn: 40.302,  time: 162.04s
+
+  train loss = 2.19750
+accuracy: 44.80 percent
+  testing: 13.999/1000,  loss: 2.128,  avg_loss: 2.381,  pn: 40.302,  time: 16.19s
+
+  test loss = 2.38063
+accuracy: 37.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch13.test2.38063.state
+epoch 13 took 178.232s
+==> Shuffling the train set
+  training: 14.999/1000,  loss: 1.968,  avg_loss: 2.148,  pn: 41.227,  time: 162.14s
+
+  train loss = 2.14806
+accuracy: 47.90 percent
+  testing: 14.999/1000,  loss: 2.080,  avg_loss: 2.382,  pn: 41.227,  time: 16.40s
+
+  test loss = 2.38181
+accuracy: 40.60 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch14.test2.38181.state
+epoch 14 took 178.554s
+==> Shuffling the train set
+  training: 15.999/1000,  loss: 2.487,  avg_loss: 2.108,  pn: 40.732,  time: 162.70s
+
+  train loss = 2.10819
+accuracy: 50.00 percent
+  testing: 15.999/1000,  loss: 3.070,  avg_loss: 2.366,  pn: 40.732,  time: 16.62s
+
+  test loss = 2.36646
+accuracy: 43.90 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch15.test2.36646.state
+epoch 15 took 179.326s
+==> Shuffling the train set
+  training: 16.999/1000,  loss: 0.975,  avg_loss: 2.062,  pn: 42.033,  time: 162.32s
+
+  train loss = 2.06229
+accuracy: 52.30 percent
+  testing: 16.999/1000,  loss: 1.236,  avg_loss: 2.262,  pn: 42.033,  time: 16.39s
+
+  test loss = 2.26221
+accuracy: 43.20 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch16.test2.26221.state
+epoch 16 took 178.710s
+==> Shuffling the train set
+  training: 17.999/1000,  loss: 2.055,  avg_loss: 2.012,  pn: 42.529,  time: 164.10s
+
+  train loss = 2.01236
+accuracy: 55.50 percent
+  testing: 17.999/1000,  loss: 2.122,  avg_loss: 2.290,  pn: 42.529,  time: 16.53s
+
+  test loss = 2.29040
+accuracy: 46.10 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch17.test2.29040.state
+epoch 17 took 180.627s
+==> Shuffling the train set
+  training: 18.999/1000,  loss: 2.862,  avg_loss: 2.056,  pn: 46.511,  time: 165.97s
+
+  train loss = 2.05618
+accuracy: 54.00 percent
+  testing: 18.999/1000,  loss: 2.164,  avg_loss: 2.254,  pn: 46.511,  time: 16.99s
+
+  test loss = 2.25405
+accuracy: 46.70 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch18.test2.25405.state
+epoch 18 took 182.967s
+==> Shuffling the train set
+  training: 19.999/1000,  loss: 1.114,  avg_loss: 1.960,  pn: 45.660,  time: 171.18s
+
+  train loss = 1.96032
+accuracy: 55.60 percent
+  testing: 19.999/1000,  loss: 1.506,  avg_loss: 2.303,  pn: 45.660,  time: 18.69s
+
+  test loss = 2.30260
+accuracy: 47.40 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch19.test2.30260.state
+epoch 19 took 189.878s
+==> Shuffling the train set
+  training: 20.999/1000,  loss: 1.173,  avg_loss: 1.907,  pn: 46.198,  time: 169.87s
+
+  train loss = 1.90702
+accuracy: 59.80 percent
+  testing: 20.999/1000,  loss: 4.805,  avg_loss: 2.339,  pn: 46.198,  time: 17.08s
+
+  test loss = 2.33879
+accuracy: 49.40 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch20.test2.33879.state
+epoch 20 took 186.959s
+==> Shuffling the train set
+  training: 21.999/1000,  loss: 0.534,  avg_loss: 1.916,  pn: 47.577,  time: 193.36s
+
+  train loss = 1.91632
+accuracy: 59.40 percent
+  testing: 21.999/1000,  loss: 2.287,  avg_loss: 2.284,  pn: 47.577,  time: 20.06s
+
+  test loss = 2.28372
+accuracy: 46.90 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch21.test2.28372.state
+epoch 21 took 213.420s
+==> Shuffling the train set
+  training: 22.999/1000,  loss: 2.873,  avg_loss: 1.892,  pn: 48.324,  time: 171.14s
+
+  train loss = 1.89226
+accuracy: 61.70 percent
+  testing: 22.999/1000,  loss: 2.859,  avg_loss: 2.341,  pn: 48.324,  time: 16.90s
+
+  test loss = 2.34076
+accuracy: 49.00 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch22.test2.34076.state
+epoch 22 took 188.041s
+==> Shuffling the train set
+  training: 23.999/1000,  loss: 2.843,  avg_loss: 1.850,  pn: 50.976,  time: 167.85s
+
+  train loss = 1.84966
+accuracy: 64.10 percent
+  testing: 23.999/1000,  loss: 2.614,  avg_loss: 2.443,  pn: 50.976,  time: 16.58s
+
+  test loss = 2.44262
+accuracy: 47.90 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch23.test2.44262.state
+epoch 23 took 184.436s
+==> Shuffling the train set
+  training: 24.999/1000,  loss: 3.214,  avg_loss: 1.869,  pn: 52.061,  time: 190.20s
+
+  train loss = 1.86883
+accuracy: 62.20 percent
+  testing: 24.999/1000,  loss: 2.585,  avg_loss: 2.368,  pn: 52.061,  time: 16.75s
+
+  test loss = 2.36823
+accuracy: 49.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch24.test2.36823.state
+epoch 24 took 206.961s
+==> Shuffling the train set
+  training: 25.999/1000,  loss: 3.695,  avg_loss: 1.820,  pn: 50.912,  time: 172.62s
+
+  train loss = 1.81994
+accuracy: 66.00 percent
+  testing: 25.999/1000,  loss: 2.888,  avg_loss: 2.294,  pn: 50.912,  time: 16.39s
+
+  test loss = 2.29359
+accuracy: 50.20 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch25.test2.29359.state
+epoch 25 took 189.024s
+==> Shuffling the train set
+  training: 26.999/1000,  loss: 2.685,  avg_loss: 1.747,  pn: 49.030,  time: 178.77s
+
+  train loss = 1.74662
+accuracy: 67.60 percent
+  testing: 26.999/1000,  loss: 3.890,  avg_loss: 2.495,  pn: 49.030,  time: 17.48s
+
+  test loss = 2.49458
+accuracy: 49.40 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch26.test2.49458.state
+epoch 26 took 196.256s
+==> Shuffling the train set
+  training: 27.999/1000,  loss: 0.609,  avg_loss: 1.799,  pn: 50.681,  time: 173.28s
+
+  train loss = 1.79899
+accuracy: 67.80 percent
+  testing: 27.999/1000,  loss: 3.281,  avg_loss: 2.382,  pn: 50.681,  time: 16.67s
+
+  test loss = 2.38205
+accuracy: 47.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch27.test2.38205.state
+epoch 27 took 189.950s
+==> Shuffling the train set
+  training: 28.999/1000,  loss: 0.490,  avg_loss: 1.706,  pn: 50.826,  time: 179.65s
+
+  train loss = 1.70649
+accuracy: 70.30 percent
+  testing: 28.999/1000,  loss: 3.589,  avg_loss: 2.485,  pn: 50.826,  time: 17.85s
+
+  test loss = 2.48493
+accuracy: 48.90 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch28.test2.48493.state
+epoch 28 took 197.499s
+==> Shuffling the train set
+  training: 29.999/1000,  loss: 1.073,  avg_loss: 1.700,  pn: 52.407,  time: 176.31s
+
+  train loss = 1.70044
+accuracy: 69.90 percent
+  testing: 29.999/1000,  loss: 1.310,  avg_loss: 2.472,  pn: 52.407,  time: 19.49s
+
+  test loss = 2.47205
+accuracy: 49.70 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch29.test2.47205.state
+epoch 29 took 195.800s
+==> Shuffling the train set
+  training: 30.999/1000,  loss: 0.671,  avg_loss: 1.660,  pn: 52.723,  time: 174.90s
+
+  train loss = 1.65989
+accuracy: 72.40 percent
+  testing: 30.999/1000,  loss: 2.482,  avg_loss: 2.507,  pn: 52.723,  time: 17.07s
+
+  test loss = 2.50662
+accuracy: 53.70 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch30.test2.50662.state
+epoch 30 took 191.976s
+==> Shuffling the train set
+  training: 31.999/1000,  loss: 2.998,  avg_loss: 1.531,  pn: 56.212,  time: 171.10s
+
+  train loss = 1.53135
+accuracy: 74.80 percent
+  testing: 31.999/1000,  loss: 3.174,  avg_loss: 1.941,  pn: 56.212,  time: 17.74s
+
+  test loss = 1.94109
+accuracy: 62.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch31.test1.94109.state
+epoch 31 took 188.848s
+==> Shuffling the train set
+  training: 32.999/1000,  loss: 0.862,  avg_loss: 1.411,  pn: 56.469,  time: 174.04s
+
+  train loss = 1.41074
+accuracy: 77.40 percent
+  testing: 32.999/1000,  loss: 1.799,  avg_loss: 2.035,  pn: 56.469,  time: 18.60s
+
+  test loss = 2.03526
+accuracy: 61.10 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch32.test2.03526.state
+epoch 32 took 192.647s
+==> Shuffling the train set
+  training: 33.999/1000,  loss: 0.504,  avg_loss: 1.391,  pn: 57.056,  time: 183.16s
+
+  train loss = 1.39086
+accuracy: 79.20 percent
+  testing: 33.999/1000,  loss: 1.189,  avg_loss: 2.095,  pn: 57.056,  time: 17.60s
+
+  test loss = 2.09527
+accuracy: 60.30 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch33.test2.09527.state
+epoch 33 took 200.765s
+==> Shuffling the train set
+  training: 34.999/1000,  loss: 0.652,  avg_loss: 1.421,  pn: 59.162,  time: 197.75s
+
+  train loss = 1.42145
+accuracy: 77.70 percent
+  testing: 34.999/1000,  loss: 1.786,  avg_loss: 2.108,  pn: 59.162,  time: 17.16s
+
+  test loss = 2.10806
+accuracy: 60.30 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch34.test2.10806.state
+epoch 34 took 214.915s
+==> Shuffling the train set
+  training: 35.999/1000,  loss: 1.245,  avg_loss: 1.376,  pn: 63.314,  time: 219.36s
+
+  train loss = 1.37644
+accuracy: 80.40 percent
+  testing: 35.999/1000,  loss: 1.062,  avg_loss: 2.175,  pn: 63.314,  time: 28.13s
+
+  test loss = 2.17490
+accuracy: 59.90 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch35.test2.17490.state
+epoch 35 took 247.500s
+==> Shuffling the train set
+  training: 36.999/1000,  loss: 0.739,  avg_loss: 1.271,  pn: 61.558,  time: 264.03s
+
+  train loss = 1.27101
+accuracy: 82.90 percent
+  testing: 36.999/1000,  loss: 1.210,  avg_loss: 2.133,  pn: 61.558,  time: 26.40s
+
+  test loss = 2.13265
+accuracy: 61.50 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch36.test2.13265.state
+epoch 36 took 290.428s
+==> Shuffling the train set
+  training: 37.999/1000,  loss: 2.816,  avg_loss: 1.348,  pn: 65.422,  time: 246.12s
+
+  train loss = 1.34823
+accuracy: 80.40 percent
+  testing: 37.999/1000,  loss: 1.950,  avg_loss: 2.115,  pn: 65.422,  time: 27.43s
+
+  test loss = 2.11523
+accuracy: 61.10 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch37.test2.11523.state
+epoch 37 took 273.568s
+==> Shuffling the train set
+  training: 38.999/1000,  loss: 0.753,  avg_loss: 1.304,  pn: 66.680,  time: 245.38s
+
+  train loss = 1.30355
+accuracy: 82.40 percent
+  testing: 38.999/1000,  loss: 2.820,  avg_loss: 2.183,  pn: 66.680,  time: 26.59s
+
+  test loss = 2.18340
+accuracy: 60.50 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch38.test2.18340.state
+epoch 38 took 271.977s
+==> Shuffling the train set
+  training: 39.999/1000,  loss: 2.189,  avg_loss: 1.355,  pn: 71.928,  time: 244.43s
+
+  train loss = 1.35530
+accuracy: 80.20 percent
+  testing: 39.999/1000,  loss: 0.865,  avg_loss: 2.142,  pn: 71.928,  time: 29.69s
+
+  test loss = 2.14247
+accuracy: 58.80 percent
+==> saving ... states/dmn_spv.mh5.n40.bs10.babi3.epoch39.test2.14247.state
+epoch 39 took 274.127s
+

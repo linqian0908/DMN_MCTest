@@ -45,9 +45,6 @@ class DMN:
         self.cd_var = T.matrix('cd_var')
         self.ans_var = T.iscalar('answer_var')
         self.input_mask_var = T.ivector('input_mask_var')
-        
-        print "==> embedding layer"
-        self.embed = theano.shared(self.word2vec)
             
         print "==> building input module"
         self.W_inp_res_in = theano.shared(lasagne.init.Normal(0.1).sample((self.dim, self.word_vector_size)), borrow=True)

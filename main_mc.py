@@ -61,6 +61,7 @@ args_dict['dev_raw'] = dev_raw
 args_dict['test_raw'] = test_raw
 args_dict['word2vec'] = word2vec
 
+
 # init class
 if args.network == 'gru_pend':
     from mc_gru_pend import DMN
@@ -72,6 +73,8 @@ elif args.network == 'gru_dot_fix':
     from mc_gru_dot_fix import DMN
 elif args.network == 'rnn_dot_fix':
     from mc_rnn_dot_fix import DMN
+elif args.network == 'gru_gen':
+    from mc_gru_gen_ans import DMN    
 else: 
     raise Exception("No such network known: " + args.network)
     
@@ -83,7 +86,7 @@ dmn = DMN(**args_dict)
 if args.load_state != "":
     dmn.load_state(args.load_state)
 
-def do_epoch(mode, epoch, skipped=0):
+def do_epoch(args, mode, epoch, skipped=0):
     # mode is 'train' or 'test'
     y_true = []
     y_pred = []
@@ -127,8 +130,9 @@ def do_epoch(mode, epoch, skipped=0):
     print "\n%s loss = %.5f" % (mode, avg_loss)    
     accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
     print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
-    cfs = metrics.confusion_matrix(y_true, y_pred)
-    print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(cfs[3])+"]"
+    if not args.network == 'gru_gen':
+        cfs = metrics.confusion_matrix(y_true, y_pred)
+        print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(cfs[3])+"]"
     
     return avg_loss, skipped
 
@@ -137,8 +141,8 @@ if args.mode == 'train':
     skipped = 0
     for epoch in range(args.epochs):
         start_time = time.time()        
-        _, skipped = do_epoch('train', epoch, skipped)        
-        epoch_loss, skipped = do_epoch('dev', epoch, skipped)        
+        _, skipped = do_epoch(args, 'train', epoch, skipped)        
+        epoch_loss, skipped = do_epoch(args, 'dev', epoch, skipped)        
         state_name = 'states/%s.epoch%d.test%.5f.state' % (network_name, epoch, epoch_loss)
         
         if (epoch % args.save_every == 0):    
@@ -146,7 +150,7 @@ if args.mode == 'train':
             dmn.save_params(state_name, epoch)        
         print "epoch %d took %.3fs" % (epoch, float(time.time()) - start_time)
     
-    epoch_loss, skipped = do_epoch('test', epoch, skipped)
+    epoch_loss, skipped = do_epoch(args, 'test', epoch, skipped)
     
 elif args.mode == 'test':
     file = open('last_tested_model.json', 'w+')
@@ -156,7 +160,7 @@ elif args.mode == 'test':
     data["description"] = ""
     data["vocab"] = dmn.vocab.keys()
     json.dump(data, file, indent=2)
-    do_epoch('test', 0)
+    do_epoch(args,'test', 0)
 
 else:
     raise Exception("unknown mode")

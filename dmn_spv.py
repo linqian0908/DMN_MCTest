@@ -129,7 +129,7 @@ class DMN:
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid,
                   self.W_mem_res_in, self.W_mem_res_hid, self.b_mem_res, 
                   self.W_mem_upd_in, self.W_mem_upd_hid, self.b_mem_upd,
-                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid, #self.W_b,
+                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid, self.W_b,
                   self.W_1, self.W_2, self.b_1, self.b_2, self.W_a]        
         
         print "==> building loss layer and computing updates"
@@ -376,7 +376,7 @@ if __name__ == "__main__":
                   'W_inp_hid_in', 'W_inp_hid_hid', 'b_inp_hid',
                   'W_mem_res_in', 'W_mem_res_hid', 'b_mem_res', 
                   'W_mem_upd_in', 'W_mem_upd_hid', 'b_mem_upd',
-                  'W_mem_hid_in', 'W_mem_hid_hid', 'b_mem_hid', #self.W_b
+                  'W_mem_hid_in', 'W_mem_hid_hid', 'b_mem_hid', 'self.W_b',
                   'W_1', 'W_2', 'b_1', 'b_2', 'W_a']  
     fig, ax = plt.subplots(figsize=(9,4))    
     with open(file_name, 'r') as load_file:

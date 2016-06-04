@@ -6,7 +6,7 @@ and to extend it to mctest. DMN implementation for babi is based on https://gith
 ## Repository contents for babi
 | file | description |
 | --- | --- |
-| `main.py` | the main entry point to train and test available network architectures on bAbI-like tasks. modified from YerevaNN |
+| `main_babi.py` | the main entry point to train and test available network architectures on bAbI-like tasks. modified from YerevaNN |
 | `dmn_qa_draft.py` | draft version of a DMN designed for answering multiple choice questions | 
 | `dmn_spv.py` | implement gate supervision as suggested in the Kumar paper, and enforce the attentions shift (including a special end_reading gate) from episdoe to next, except that we fixed the memory hops instead of conditional ending on "end_reading". uses the square of the Euclidean distance instead of `abs` in the attention module. neet to add l2 regularization for stable training (--l2 0.001). added gradient check to skip bad ones (NaN), but slows down the network. with regularization set to non-zero, might be able to get rid of the gradient check part for speedup. also include a main function for visualizing weights, which takes path to state to load |
 | `utils.py` | tools for working with bAbI tasks and GloVe vectors. modified from YerevaNN |
@@ -48,26 +48,16 @@ no mini-batch implementation. the _fix substript in network means the word embed
 
 ## DMN on babi Usage
 
-This implementation is based on Theano and Lasagne. One way to install them is:
+Use `main_babi.py` to train a network:
 
-    pip install -r https://raw.githubusercontent.com/Lasagne/Lasagne/master/requirements.txt
-    pip install https://github.com/Lasagne/Lasagne/archive/master.zip
-
-The following bash scripts will download bAbI tasks and GloVe vectors.
-
-    ./fetch_babi_data.sh
-    ./fetch_glove_data.sh
-
-Use `main.py` to train a network:
-
-    python main.py --network dmn_basic --babi_id 1
-    python main.py --network dmn_spv --babi_id 3 --memory_hops 5 --l2 0.001 --log_every 1000
-    python main.py --network dmn_spv --babi_id 3 --memory_hops 5 --l2 0.001 --log_every 200 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch5.test2.28071.state
+    python main_babi.py --network dmn_basic --babi_id 1
+    python main_babi.py --network dmn_spv --babi_id 3 --memory_hops 5 --l2 0.001 --log_every 1000
+    python main_babi.py --network dmn_spv --babi_id 3 --memory_hops 5 --l2 0.001 --log_every 200 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch5.test2.28071.state
 
 The states of the network will be saved in `states/` folder. 
 There is one pretrained state on the 1st bAbI task. It should give 100% accuracy on the test set:
 
-    python main.py --network dmn_basic --mode test --babi_id 1 --load_state states/dmn_basic.mh5.n40.babi1.epoch4.test0.00033.state
+    python main_babi.py --network dmn_basic --mode test --babi_id 1 --load_state states/dmn_basic.mh5.n40.babi1.epoch4.test0.00033.state
 
 To view weights of pre-trained state
     
@@ -95,17 +85,15 @@ view_babi and view_mc can visualize attention gate over episode. Need to load fr
 
     python view_babi.py --network dmn_smooth --babi_id 2 --load_state states/dmn_smooth.mh3.n40.bs10.babi2.epoch29.test6.43988.state
     
-    sudo python view_babi.py --network dmn_spv --babi_id 2 --memory_hops 3 --load_state states/dmn_spv.mh3.n40.bs10.babi2.epoch12.test1.16323.state
+    python view_babi.py --network dmn_spv --babi_id 2 --memory_hops 3 --load_state states/dmn_spv.mh3.n40.bs10.babi2.epoch12.test1.16323.state
     
-    sudo python view_babi.py --network dmn_spv --babi_id 3 --memory_hops 5 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch5.test2.28071.state
+    python view_babi.py --network dmn_spv --babi_id 3 --memory_hops 5 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch5.test2.28071.state
     
     python view_mc.py --network gru_dot_fix --id mc160 --load_state states/gru_dot_fix.mh3.n40.bs10.d0.3.mc160.epoch25.test5.22941.state
     
-    sudo python view_babi.py --network dmn_spv --memory_hops 5 --babi_id 3 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch29.test7.27444.state
+    python view_babi.py --network dmn_spv --memory_hops 5 --babi_id 3 --load_state states/dmn_spv.mh5.n40.bs10.babi3.epoch29.test7.27444.state
 
 ## Roadmap
 
-Supervised training on babi
-Attention gate trained on babi and transfer to mctest
 MCtest with recurrent answer module and direct answer generation (ignore choices at test time)
 

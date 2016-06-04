@@ -85,7 +85,7 @@ class DMN:
         self.b_mem_hid = theano.shared(lasagne.init.Constant(0.0).sample((self.dim,)), borrow=True)
         
         self.W_b = theano.shared(lasagne.init.Normal(0.1).sample((self.dim, self.dim)), borrow=True)
-        self.W_1 = theano.shared(lasagne.init.Normal(0.1).sample((self.dim, 7 * self.dim)), borrow=True)
+        self.W_1 = theano.shared(lasagne.init.Normal(0.1).sample((self.dim, 7 * self.dim + 2)), borrow=True)
         self.W_2 = theano.shared(lasagne.init.Normal(0.1).sample((1, self.dim)), borrow=True)
         self.b_1 = theano.shared(lasagne.init.Constant(0.0).sample((self.dim,)), borrow=True)
         self.b_2 = theano.shared(lasagne.init.Constant(0.0).sample((1,)), borrow=True)
@@ -126,8 +126,8 @@ class DMN:
                   self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid,
                   self.W_mem_res_in, self.W_mem_res_hid, self.b_mem_res, 
                   self.W_mem_upd_in, self.W_mem_upd_hid, self.b_mem_upd,
-                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid,
-                  self.W_b, self.W_1, self.W_2, self.b_1, self.b_2, self.W_a]        
+                  self.W_mem_hid_in, self.W_mem_hid_hid, self.b_mem_hid,self.W_a]
+                  #self.W_b, self.W_1, self.W_2, self.b_1, self.b_2, self.W_a]        
         
         print "==> building loss layer and computing updates"
         self.loss_ce = T.nnet.categorical_crossentropy(self.prediction.dimshuffle('x', 0), T.stack([self.ans_var]))[0]
@@ -156,7 +156,7 @@ class DMN:
                                        allow_input_downcast = True,
                                        outputs=[self.prediction, self.loss, self.attentions])
         
-        
+        '''
         if self.mode == 'train':
             print "==> computing gradients (for debugging)"
             gradient = T.grad(self.loss, self.params)
@@ -164,7 +164,7 @@ class DMN:
                                                            self.ca_var, self.cb_var, self.cc_var, self.cd_var,
                                                            self.input_mask_var],
                                                    allow_input_downcast = True,
-                                                   outputs=gradient)
+                                                   outputs=gradient)'''
     
     
     def GRU_update(self, h, x, W_res_in, W_res_hid, b_res,
@@ -192,9 +192,9 @@ class DMN:
                                      self.W_inp_hid_in, self.W_inp_hid_hid, self.b_inp_hid)
     
     def new_attention_step(self, ct, prev_g, mem, q_q):
-        #cWq = T.stack([T.dot(T.dot(ct, self.W_b), q_q)])
-        #cWm = T.stack([T.dot(T.dot(ct, self.W_b), mem)])
-        z = T.concatenate([ct, mem, q_q, ct * q_q, ct * mem, (ct - q_q) ** 2, (ct - mem) ** 2])#, cWq, cWm])
+        cWq = T.stack([T.dot(T.dot(ct, self.W_b), q_q)])
+        cWm = T.stack([T.dot(T.dot(ct, self.W_b), mem)])
+        z = T.concatenate([ct, mem, q_q, ct * q_q, ct * mem, (ct - q_q) ** 2, (ct - mem) ** 2, cWq, cWm])
         
         l_1 = T.dot(self.W_1, z) + self.b_1
         l_1 = T.tanh(l_1)
@@ -243,7 +243,17 @@ class DMN:
                 protocol = -1
             )
     
-    
+    def load_gate(self, file_name):
+        print "==> loading gate weights from %s" % file_name
+        with open(file_name, 'r') as load_file:
+            loaded_params = pickle.load(load_file)
+            self.W_b.set_value(loaded_params['W_b'])
+            self.W_1.set_value(loaded_params['W_1'])
+            self.W_2.set_value(loaded_params['W_2'])
+            self.b_1.set_value(loaded_params['b_1'])
+            self.b_2.set_value(loaded_params['b_2'])
+                                
+        
     def load_state(self, file_name):
         print "==> loading state %s" % file_name
         with open(file_name, 'r') as load_file:
@@ -311,8 +321,8 @@ class DMN:
         input_mask = input_masks[batch_index]
 
         skipped = 0
-        grad_norm = float('NaN')
-        
+        grad_norm = float(0.) #float('NaN')
+        '''
         if mode == 'train':
             gradient_value = self.get_gradient_fn(inp, q, ans, ca, cb, cc, cd, input_mask)
             grad_norm = np.max([utils.get_norm(x) for x in gradient_value])
@@ -320,7 +330,7 @@ class DMN:
             if (np.isnan(grad_norm)):
                 print "==> gradient is nan at index %d." % batch_index
                 print "==> skipping"
-                skipped = 1
+                skipped = 1'''
         
         if skipped == 0:
             ret = theano_fn(inp, q, ans, ca, cb, cc, cd, input_mask)

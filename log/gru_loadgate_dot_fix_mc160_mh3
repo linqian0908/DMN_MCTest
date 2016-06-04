@@ -1,0 +1,344 @@
+➜  dmn git:(master) ✗ sudo python main_mc.py --network gru_dot_fix --l2 0.001 --load_gate param/dmn_spv.mh5.babi3
+==> parsing input arguments
+Namespace(answer_module='feedforward', batch_norm=False, batch_size=10, dim=40, dropout=0, epochs=30, id='mc160', input_mask_mode='sentence', l2=0.001, load_embed=True, load_gate='param/dmn_spv.mh5.babi3', load_state='', log_every=500, lr=1.0, memory_hops=3, mode='train', network='gru_dot_fix', normalize_attention=False, prefix='', save_every=1, word_vector_size=50)
+Train file: mc160.train.tsv
+Parsing questions data/MCTest/mc160.train.tsv data/MCTest/mc160.train.ans
+There are 280 tasks
+There are 1994 words
+Parsing questions data/MCTest/mc160.dev.tsv data/MCTest/mc160.dev.ans
+There are 120 tasks
+There are 2404 words
+Parsing questions data/MCTest/mc160.test.tsv data/MCTest/mc160.test.ans
+There are 240 tasks
+There are 2991 words
+Loading pickled embedding
+==> no minibatch training, argument batch_size is useless
+==> model: GRU, dot similarity, fixed embedding
+==> not used params in DMN class: ['load_gate', 'network', 'save_every', 'load_state', 'lr', 'epochs', 'prefix', 'answer_module', 'batch_size', 'log_every', 'load_embed', 'id', 'batch_norm']
+max statement length is 405
+max question length is 31
+max Tc length is 42
+max statement length is 460
+max question length is 19
+max Tc length is 48
+max statement length is 364
+max question length is 21
+max Tc length is 41
+==> building input module
+==> creating parameters for memory module
+==> building episodic memory module (fixed number of steps: 3)
+==> building options module
+==> building answer module
+==> collecting all parameters
+==> building loss layer and computing updates
+==> compiling train_fn
+==> compiling test_fn
+==> loading gate weights from param/dmn_spv.mh5.babi3
+==> training
+
+train loss = 1.57363
+accuracy: 30.36 percent
+/usr/local/lib/python2.7/dist-packages/numpy-1.11.0-py2.7-linux-x86_64.egg/numpy/core/fromnumeric.py:2652: VisibleDeprecationWarning: `rank` is deprecated; use the `ndim` attribute or function instead. To find the rank of a matrix see `numpy.linalg.matrix_rank`.
+  VisibleDeprecationWarning)
+confusion matrix: [[22 15 19 15], [12 18 26  8], [19 17 29 17], [19 17 11 16]]
+
+dev loss = 1.49546
+accuracy: 33.33 percent
+confusion matrix: [[4 3 4 7], [ 7 14  9  5], [10  5 13 10], [ 5  4 11  9]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch0.test1.49546.state
+epoch 0 took 14.767s
+
+train loss = 1.35675
+accuracy: 41.07 percent
+confusion matrix: [[27 18 15 11], [ 9 29 19  7], [20 12 35 15], [14 16  9 24]]
+
+dev loss = 1.49347
+accuracy: 30.00 percent
+confusion matrix: [[6 2 4 6], [ 6 15  6  8], [13  6  8 11], [7 6 9 7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch1.test1.49347.state
+epoch 1 took 15.072s
+
+train loss = 1.24771
+accuracy: 48.57 percent
+confusion matrix: [[33 15 14  9], [ 6 35 17  6], [17 13 38 14], [ 6 17 10 30]]
+
+dev loss = 1.54967
+accuracy: 30.83 percent
+confusion matrix: [[8 2 4 4], [ 6 14  4 11], [12  7  8 11], [9 5 8 7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch2.test1.54967.state
+epoch 2 took 14.957s
+
+train loss = 1.15839
+accuracy: 56.43 percent
+confusion matrix: [[38 13 12  8], [ 5 40 12  7], [13 11 44 14], [ 5 14  8 36]]
+
+dev loss = 1.67421
+accuracy: 33.33 percent
+confusion matrix: [[6 3 4 5], [ 6 16  4  9], [12  7  9 10], [7 5 8 9]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch3.test1.67421.state
+epoch 3 took 14.917s
+
+train loss = 1.05744
+accuracy: 59.29 percent
+confusion matrix: [[43 11 13  4], [ 5 42 10  7], [15 13 43 11], [ 7 10  8 38]]
+
+dev loss = 1.88109
+accuracy: 35.00 percent
+confusion matrix: [[6 3 4 5], [ 5 18  4  8], [16  7  8  7], [ 7  5  7 10]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch4.test1.88109.state
+epoch 4 took 14.841s
+
+train loss = 0.94520
+accuracy: 65.71 percent
+confusion matrix: [[47  8 10  6], [ 9 44  4  7], [11 10 51 10], [ 6  8  7 42]]
+
+dev loss = 2.21395
+accuracy: 35.83 percent
+confusion matrix: [[7 3 3 5], [ 6 17  4  8], [13  7  9  9], [ 7  4  8 10]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch5.test2.21395.state
+epoch 5 took 14.954s
+
+train loss = 0.83611
+accuracy: 73.21 percent
+confusion matrix: [[52  6  9  4], [ 7 47  5  5], [10  6 60  6], [ 5  7  5 46]]
+
+dev loss = 2.58837
+accuracy: 35.00 percent
+confusion matrix: [[6 4 3 5], [ 7 17  4  7], [13  8  9  8], [ 7  4  8 10]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch6.test2.58837.state
+epoch 6 took 14.880s
+
+train loss = 0.73859
+accuracy: 77.14 percent
+confusion matrix: [[54  9  4  4], [ 7 50  1  6], [ 8  7 63  4], [ 5  7  2 49]]
+
+dev loss = 2.87478
+accuracy: 35.83 percent
+confusion matrix: [[6 4 3 5], [ 6 17  3  9], [12  8 10  8], [ 7  3  9 10]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch7.test2.87478.state
+epoch 7 took 14.973s
+
+train loss = 0.70189
+accuracy: 77.14 percent
+confusion matrix: [[59  3  5  4], [ 7 48  5  4], [ 8  8 62  4], [ 4  7  5 47]]
+
+dev loss = 3.14499
+accuracy: 35.83 percent
+confusion matrix: [[6 3 4 5], [ 6 15  5  9], [10  5 14  9], [7 5 9 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch8.test3.14499.state
+epoch 8 took 15.133s
+
+train loss = 0.66995
+accuracy: 80.36 percent
+confusion matrix: [[57  7  4  3], [ 5 51  2  6], [ 7  8 63  4], [ 3  3  3 54]]
+
+dev loss = 3.74724
+accuracy: 36.67 percent
+confusion matrix: [[9 2 3 4], [ 6 14  5 10], [11  6 12  9], [9 2 9 9]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch9.test3.74724.state
+epoch 9 took 14.990s
+
+train loss = 0.65603
+accuracy: 81.07 percent
+confusion matrix: [[59  6  3  3], [ 5 49  5  5], [ 6  6 68  2], [ 5  6  1 51]]
+
+dev loss = 3.31507
+accuracy: 35.00 percent
+confusion matrix: [[7 3 3 5], [ 8 14  4  9], [13  6 12  7], [9 4 7 9]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch10.test3.31507.state
+epoch 10 took 15.147s
+
+train loss = 0.60246
+accuracy: 82.50 percent
+confusion matrix: [[55  6  6  4], [ 4 54  3  3], [ 5  5 69  3], [ 3  5  2 53]]
+
+dev loss = 3.71850
+accuracy: 31.67 percent
+confusion matrix: [[6 2 4 6], [ 7 13  4 11], [14  5 11  8], [9 6 6 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch11.test3.71850.state
+epoch 11 took 14.970s
+
+train loss = 0.51125
+accuracy: 87.86 percent
+confusion matrix: [[62  0  4  5], [ 6 56  2  0], [ 5  2 71  4], [ 2  2  2 57]]
+
+dev loss = 4.29017
+accuracy: 34.17 percent
+confusion matrix: [[6 3 3 6], [ 6 14  5 10], [11  5 13  9], [9 5 7 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch12.test4.29017.state
+epoch 12 took 15.069s
+
+train loss = 0.47471
+accuracy: 88.57 percent
+confusion matrix: [[58  4  4  5], [ 6 56  2  0], [ 2  3 75  2], [ 2  2  0 59]]
+
+dev loss = 4.19638
+accuracy: 31.67 percent
+confusion matrix: [[6 2 4 6], [ 7 12  5 11], [11  4 13 10], [10  5  7  7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch13.test4.19638.state
+epoch 13 took 16.321s
+
+train loss = 0.43515
+accuracy: 89.29 percent
+confusion matrix: [[62  4  1  4], [ 5 56  2  1], [ 2  3 75  2], [ 3  1  2 57]]
+
+dev loss = 4.07189
+accuracy: 35.83 percent
+confusion matrix: [[6 2 4 6], [ 8 14  4  9], [ 9  6 15  8], [9 4 8 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch14.test4.07189.state
+epoch 14 took 15.050s
+
+train loss = 0.47491
+accuracy: 86.79 percent
+confusion matrix: [[60  4  3  4], [ 6 53  3  2], [ 2  2 75  3], [ 4  2  2 55]]
+
+dev loss = 4.63792
+accuracy: 31.67 percent
+confusion matrix: [[5 3 4 6], [ 7 12  7  9], [13  5 14  6], [9 6 7 7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch15.test4.63792.state
+epoch 15 took 14.993s
+
+train loss = 0.39531
+accuracy: 91.43 percent
+confusion matrix: [[62  3  4  2], [ 2 59  2  1], [ 1  1 77  3], [ 2  0  3 58]]
+
+dev loss = 4.65329
+accuracy: 35.00 percent
+confusion matrix: [[6 3 3 6], [ 7 15  4  9], [12  6 13  7], [10  5  6  8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch16.test4.65329.state
+epoch 16 took 15.285s
+
+train loss = 0.37444
+accuracy: 92.50 percent
+confusion matrix: [[65  2  2  2], [ 4 57  3  0], [ 2  2 76  2], [ 0  0  2 61]]
+
+dev loss = 4.81934
+accuracy: 32.50 percent
+confusion matrix: [[6 3 3 6], [ 7 12  6 10], [12  6 14  6], [10  6  6  7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch17.test4.81934.state
+epoch 17 took 14.852s
+
+train loss = 0.37049
+accuracy: 91.43 percent
+confusion matrix: [[64  3  2  2], [ 3 57  3  1], [ 1  2 76  3], [ 1  1  2 59]]
+
+dev loss = 4.81473
+accuracy: 34.17 percent
+confusion matrix: [[6 3 3 6], [ 9 14  4  8], [11  6 14  7], [11  5  6  7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch18.test4.81473.state
+epoch 18 took 14.971s
+
+train loss = 0.35389
+accuracy: 92.50 percent
+confusion matrix: [[65  2  3  1], [ 4 57  3  0], [ 2  2 76  2], [ 0  1  1 61]]
+
+dev loss = 4.91889
+accuracy: 34.17 percent
+confusion matrix: [[6 3 3 6], [ 6 13  6 10], [12  6 14  6], [9 5 7 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch19.test4.91889.state
+epoch 19 took 14.976s
+
+train loss = 0.34868
+accuracy: 92.86 percent
+confusion matrix: [[67  3  1  0], [ 2 59  3  0], [ 1  3 76  2], [ 1  1  3 58]]
+
+dev loss = 5.03937
+accuracy: 34.17 percent
+confusion matrix: [[6 3 3 6], [ 9 13  5  8], [11  6 14  7], [11  3  7  8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch20.test5.03937.state
+epoch 20 took 14.993s
+
+train loss = 0.36502
+accuracy: 92.86 percent
+confusion matrix: [[65  2  3  1], [ 3 58  3  0], [ 2  2 76  2], [ 0  1  1 61]]
+
+dev loss = 5.26026
+accuracy: 31.67 percent
+confusion matrix: [[7 3 3 5], [ 7 12  6 10], [13  6 11  8], [8 5 8 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch21.test5.26026.state
+epoch 21 took 14.980s
+
+train loss = 0.36444
+accuracy: 92.86 percent
+confusion matrix: [[68  3  0  0], [ 2 59  2  1], [ 2  3 75  2], [ 1  1  3 58]]
+
+dev loss = 5.28071
+accuracy: 35.83 percent
+confusion matrix: [[7 3 3 5], [ 8 16  4  7], [12  6 13  7], [10  3  9  7]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch22.test5.28071.state
+epoch 22 took 15.036s
+
+train loss = 0.38179
+accuracy: 91.07 percent
+confusion matrix: [[67  1  2  1], [ 4 56  3  1], [ 3  3 73  3], [ 2  1  1 59]]
+
+dev loss = 5.24816
+accuracy: 30.83 percent
+confusion matrix: [[5 4 3 6], [ 7 13  5 10], [12  7 11  8], [9 4 8 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch23.test5.24816.state
+epoch 23 took 15.306s
+
+train loss = 0.49794
+accuracy: 87.50 percent
+confusion matrix: [[62  3  3  3], [ 2 57  2  3], [ 3  4 71  4], [ 2  3  3 55]]
+
+dev loss = 4.27742
+accuracy: 35.83 percent
+confusion matrix: [[7 4 4 3], [ 8 15  3  9], [10  7 13  8], [ 7  4 10  8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch24.test4.27742.state
+epoch 24 took 14.986s
+
+train loss = 0.40467
+accuracy: 91.79 percent
+confusion matrix: [[63  3  3  2], [ 1 60  2  1], [ 2  1 75  4], [ 0  3  1 59]]
+
+dev loss = 5.09784
+accuracy: 33.33 percent
+confusion matrix: [[7 3 4 4], [10 11  4 10], [11  6 12  9], [ 8  5  6 10]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch25.test5.09784.state
+epoch 25 took 15.360s
+
+train loss = 0.32361
+accuracy: 92.86 percent
+confusion matrix: [[67  3  1  0], [ 3 58  3  0], [ 1  2 76  3], [ 1  1  2 59]]
+
+dev loss = 5.12705
+accuracy: 35.83 percent
+confusion matrix: [[6 2 5 5], [ 5 16  4 10], [13  6 12  7], [8 3 9 9]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch26.test5.12705.state
+epoch 26 took 15.157s
+
+train loss = 0.33151
+accuracy: 92.14 percent
+confusion matrix: [[65  2  3  1], [ 4 56  3  1], [ 2  2 77  1], [ 0  0  3 60]]
+
+dev loss = 4.81245
+accuracy: 36.67 percent
+confusion matrix: [[8 2 4 4], [ 7 15  4  9], [13  5 12  8], [7 5 8 9]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch27.test4.81245.state
+epoch 27 took 15.289s
+
+train loss = 0.34340
+accuracy: 92.50 percent
+confusion matrix: [[67  3  0  1], [ 2 58  3  1], [ 1  3 75  3], [ 1  1  2 59]]
+
+dev loss = 4.98245
+accuracy: 34.17 percent
+confusion matrix: [[6 3 4 5], [ 7 15  5  8], [14  5 12  7], [9 4 8 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch28.test4.98245.state
+epoch 28 took 15.116s
+
+train loss = 0.33941
+accuracy: 92.14 percent
+confusion matrix: [[66  2  2  1], [ 4 56  3  1], [ 2  1 77  2], [ 0  1  3 59]]
+
+dev loss = 5.35134
+accuracy: 35.00 percent
+confusion matrix: [[7 2 4 5], [ 7 15  5  8], [13  4 12  9], [8 4 9 8]]
+==> saving ... states/gru_dot_fix.mh3.n40.bs10.mc160.epoch29.test5.35134.state
+epoch 29 took 14.936s
+
+test loss = 5.57896
+accuracy: 32.92 percent
+confusion matrix: [[18 13 14 11], [20 20  8 12], [16 20 21  9], [15 14  9 20]]
+

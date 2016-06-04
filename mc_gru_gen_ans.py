@@ -177,7 +177,7 @@ class DMN:
         
         self.loss = self.loss_ce + self.loss_l2
         
-        updates = lasagne.updates.adadelta(self.loss, self.params)
+        updates = lasagne.updates.adam(self.loss, self.params)
         #updates = lasagne.updates.momentum(self.loss, self.params, learning_rate=0.0003)
         
         if self.mode == 'train':
@@ -371,8 +371,8 @@ class DMN:
         ret = theano_fn(inp, q, ans, input_mask, max_n)
         param_norm = np.max([utils.get_norm(x.get_value()) for x in self.params])
         
-        return {"prediction": np.array([ret[0]]),
-                "answers": np.array([ans]),
+        return {"prediction": np.array(ret[0]),
+                "answers": ans,
                 "current_loss": ret[1],
                 "skipped": 0,
                 "log": "pn: %.3f" % param_norm,

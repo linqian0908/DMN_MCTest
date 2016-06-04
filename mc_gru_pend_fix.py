@@ -273,7 +273,18 @@ class DMN:
                 protocol = -1
             )
     
-    
+    def load_gate(self, file_name):
+        print "==> loading gate weights from %s" % file_name
+        with open(file_name, 'r') as load_file:
+            dict = pickle.load(load_file)
+            loaded_params = dict['params']
+            self.W_b.set_value(dict['W_b'])
+            self.W_1.set_value(dict['W_1'])
+            self.W_2.set_value(dict['W_2'])
+            self.b_1.set_value(dict['b_1'])
+            self.b_2.set_value(dict['b_2'])
+            
+            
     def load_state(self, file_name):
         print "==> loading state %s" % file_name
         with open(file_name, 'r') as load_file:

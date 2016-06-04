@@ -370,18 +370,33 @@ class DMN:
 
 if __name__ == "__main__":
     file_name = sys.argv[1]
+    flag = False
+    if len(sys.argv)>2:
+        flag = True
+        out_obj = {}
+        to_write = ['W_b', 'W_1', 'W_2', 'b_1', 'b_2']
+        
     print "==> loading state %s" % file_name
     params = ['W_inp_res_in', 'W_inp_res_hid', 'b_inp_res', 
                   'W_inp_upd_in', 'W_inp_upd_hid', 'b_inp_upd',
                   'W_inp_hid_in', 'W_inp_hid_hid', 'b_inp_hid',
                   'W_mem_res_in', 'W_mem_res_hid', 'b_mem_res', 
                   'W_mem_upd_in', 'W_mem_upd_hid', 'b_mem_upd',
-                  'W_mem_hid_in', 'W_mem_hid_hid', 'b_mem_hid', 'self.W_b',
+                  'W_mem_hid_in', 'W_mem_hid_hid', 'b_mem_hid', 'W_b',
                   'W_1', 'W_2', 'b_1', 'b_2', 'W_a']  
     fig, ax = plt.subplots(figsize=(9,4))    
     with open(file_name, 'r') as load_file:
         dict = pickle.load(load_file)
         loaded_params = dict['params']
+        
+        if flag:
+            for i in xrange(len(params)):
+                if params[i] in to_write:
+                    out_obj[params[i]] = loaded_params[i]
+            with open(sys.argv[2], 'w') as save_file:
+                pickle.dump(obj = out_obj,file = save_file,protocol = -1)
+            print "finish dumping file to "+sys.argv[2]
+            
         for (x, y) in zip(params, loaded_params):
             n = y.shape
             if len(n)==1:
@@ -394,6 +409,4 @@ if __name__ == "__main__":
                 ax.imshow(y,cmap = 'Blues',interpolation='none')
                 plt.title('Train. '+x+', norm '+str(norm))
                 fig.show()
-                input_str = raw_input("Press ENTER to continue. Type exit to stop: ")
-                if input_str=="exit":
-                    break
+                input_str = raw_input("Press ENTER to continue.")

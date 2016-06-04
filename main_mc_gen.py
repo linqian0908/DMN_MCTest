@@ -4,6 +4,7 @@ import sklearn.metrics as metrics
 import argparse
 import time
 import json
+import random 
 
 import utils
 import nn_utils
@@ -13,12 +14,12 @@ import cPickle
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="gru_dot_fix", help='network type: gru_pend, gru_dot, gru_pend_fix')
+parser.add_argument('--network', type=str, default="gru_gen", help='network type: gru_gen')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs')
 parser.add_argument('--load_state', type=str, default="", help='state file path')
-parser.add_argument('--answer_module', type=str, default="feedforward", help='answer module type: feedforward or recurrent')
+parser.add_argument('--answer_module', type=str, default="recurrent", help='answer module type: feedforward or recurrent')
 parser.add_argument('--mode', type=str, default="train", help='mode: train or test. Test mode required load_state')
 parser.add_argument('--input_mask_mode', type=str, default="sentence", help='input_mask_mode: word or sentence')
 parser.add_argument('--memory_hops', type=int, default=3, help='memory GRU steps')
@@ -67,17 +68,7 @@ args_dict['test_raw'] = test_raw
 args_dict['word2vec'] = word2vec
 
 # init class
-if args.network == 'gru_pend':
-    from mc_gru_pend import DMN
-elif args.network == 'gru_dot':
-    from mc_gru_dot import DMN
-elif args.network == 'gru_pend_fix':
-    from mc_gru_pend_fix import DMN
-elif args.network == 'gru_dot_fix':
-    from mc_gru_dot_fix import DMN
-elif args.network == 'rnn_dot_fix':
-    from mc_rnn_dot_fix import DMN
-elif args.network == 'gru_gen':
+if args.network == 'gru_gen':
     from mc_gru_gen_ans import DMN    
 else: 
     raise Exception("No such network known: " + args.network)
@@ -121,17 +112,13 @@ def do_epoch(args, mode, epoch, skipped=0):
         
         skipped += current_skip
         
-        if current_skip == 0:
+        if current_skip == 0:                
             avg_loss += current_loss
-            if not args.network == 'gru_gen':
-                for x in answers:
-                    y_true.append(x)
-                
-                for x in prediction.argmax(axis=1):
-                    y_pred.append(x)
-            else:
-                y_true.append(answers)
-                y_pred.append(prediction.argmax(axis=1))
+            y_true.append(answers)
+            y_pred.append(prediction.argmax(axis=1))
+            if random.random()<0.05:
+                print 'True: '+' '.join(str(ivocab[x]) for x in y_true)
+                print 'Predict: '+' '.join(str(vocab[x]) for x in y_pred)
                 
             # TODO: save the state sometimes
             if (i % args.log_every == (args.log_every-1)):
@@ -147,14 +134,9 @@ def do_epoch(args, mode, epoch, skipped=0):
 
     avg_loss /= batches_per_epoch
     print "\n%s loss = %.5f" % (mode, avg_loss) 
-    if not args.network == 'gru_gen':
-        accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
-        print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
-        cfs = metrics.confusion_matrix(y_true, y_pred)
-        print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(cfs[3])+"]"
-    else:
-        accuracy = sum([1 if sentence_equal(t,p) else 0 for t,p in zip(y_true,y_pred)])
-        print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
+
+    accuracy = sum([1 if sentence_equal(t,p) else 0 for t,p in zip(y_true,y_pred)])
+    print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
                 
     return avg_loss, skipped
 
@@ -180,7 +162,7 @@ elif args.mode == 'test':
     data["id"] = network_name
     data["name"] = network_name
     data["description"] = ""
-    data["vocab"] = dmn.vocab.keys()
+    data["vocab"] = vocab
     json.dump(data, file, indent=2)
     do_epoch(args,'test', 0)
 

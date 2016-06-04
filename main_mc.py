@@ -9,11 +9,12 @@ import utils
 import nn_utils
 import mctest_parse
 import cPickle
+import random
 
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="gru_dot_fix", help='network type: gru_pend, gru_dot, gru_pend_fix')
+parser.add_argument('--network', type=str, default="gru_dot_fix", help='network type: gru_pend, gru_dot, gru_pend_fix, gru_dot_fix, gru_gen')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs')
@@ -78,7 +79,7 @@ elif args.network == 'gru_dot_fix':
 elif args.network == 'rnn_dot_fix':
     from mc_rnn_dot_fix import DMN
 elif args.network == 'gru_gen':
-    from mc_gru_gen_ans import DMN    
+    from mc_gru_gen_one import DMN    
 else: 
     raise Exception("No such network known: " + args.network)
     
@@ -123,16 +124,17 @@ def do_epoch(args, mode, epoch, skipped=0):
         
         if current_skip == 0:
             avg_loss += current_loss
-            if not args.network == 'gru_gen':
-                for x in answers:
-                    y_true.append(x)
-                
-                for x in prediction.argmax(axis=1):
-                    y_pred.append(x)
-            else:
-                y_true.append(answers)
-                y_pred.append(prediction.argmax(axis=1))
-                
+            for x in answers:
+                y_true.append(x)
+            
+            for x in prediction.argmax(axis=1):
+                y_pred.append(x)
+            
+            '''if args.network == 'gru_gen':
+                if random.random()<0.1:
+                    print 'True: ', ivocab[y_true[-1]]
+                    print 'Predict: ', ivocab[y_pred[-1]]'''
+                   
             # TODO: save the state sometimes
             if (i % args.log_every == (args.log_every-1)):
                 cur_time = time.time()
@@ -147,14 +149,12 @@ def do_epoch(args, mode, epoch, skipped=0):
 
     avg_loss /= batches_per_epoch
     print "\n%s loss = %.5f" % (mode, avg_loss) 
+    
+    accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
+    print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
     if not args.network == 'gru_gen':
-        accuracy = sum([1 if t == p else 0 for t, p in zip(y_true, y_pred)])
-        print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
         cfs = metrics.confusion_matrix(y_true, y_pred)
         print "confusion matrix: ["+str(cfs[0])+', '+str(cfs[1])+', '+str(cfs[2])+', '+str(cfs[3])+"]"
-    else:
-        accuracy = sum([1 if sentence_equal(t,p) else 0 for t,p in zip(y_true,y_pred)])
-        print "accuracy: %.2f percent" % (accuracy * 100.0 / batches_per_epoch / args.batch_size)
                 
     return avg_loss, skipped
 
@@ -164,7 +164,8 @@ if args.mode == 'train':
     for epoch in range(args.epochs):
         start_time = time.time()        
         _, skipped = do_epoch(args, 'train', epoch, skipped)        
-        epoch_loss, skipped = do_epoch(args, 'dev', epoch, skipped)        
+        epoch_loss, skipped = do_epoch(args, 'dev', epoch, skipped)  
+        epoch_loss, skipped = do_epoch(args, 'test', epoch, skipped)       
         state_name = 'states/%s.epoch%d.test%.5f.state' % (network_name, epoch, epoch_loss)
         
         if (epoch % args.save_every == 0):    
@@ -180,7 +181,7 @@ elif args.mode == 'test':
     data["id"] = network_name
     data["name"] = network_name
     data["description"] = ""
-    data["vocab"] = dmn.vocab.keys()
+    data["vocab"] = vocab
     json.dump(data, file, indent=2)
     do_epoch(args,'test', 0)
 

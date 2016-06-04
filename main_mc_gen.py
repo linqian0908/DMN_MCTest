@@ -117,8 +117,8 @@ def do_epoch(args, mode, epoch, skipped=0):
             y_true.append(answers)
             y_pred.append(prediction.argmax(axis=1))
             if random.random()<0.05:
-                print 'True: '+' '.join(str(ivocab[x]) for x in y_true)
-                print 'Predict: '+' '.join(str(vocab[x]) for x in y_pred)
+                print 'True: '+' '.join(str(ivocab[x]) for x in y_true[-1])
+                print 'Predict: '+' '.join(str(ivocab[x]) for x in y_pred[-1])
                 
             # TODO: save the state sometimes
             if (i % args.log_every == (args.log_every-1)):

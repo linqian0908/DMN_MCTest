@@ -5,6 +5,7 @@ import argparse
 import time
 import json
 import random
+import pylab as plt
 
 import utils
 import nn_utils
@@ -16,7 +17,7 @@ from mctest_parse import print_words
 print "==> parsing input arguments"
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--network', type=str, default="gru_dot_fixed", help='network type: gru_pend, gru_dot, gru_pend_fix')
+parser.add_argument('--network', type=str, default="gru_dot_fix", help='network type: gru_pend, gru_dot, gru_pend_fix')
 parser.add_argument('--word_vector_size', type=int, default=50, help='embeding size (50, 100, 200, 300 only)')
 parser.add_argument('--dim', type=int, default=40, help='number of hidden units in input module GRU')
 parser.add_argument('--epochs', type=int, default=30, help='number of epochs')
@@ -77,19 +78,25 @@ if args.load_state != "":
 unseen_raw = dev_raw + test_raw
 unseen_w = dev_w + test_w
 input_str = ""
-while not input_str=="exit":
+fig, ax = plt.subplots(figsize=(9,4))
+for n in [0,100,200,300,400,500,600]:
+#while not input_str=="exit":
     print "==> Training sample"
-    n = random.randint(0,len(train_raw)-1)
+    #n = random.randint(0,len(train_raw)-1)
     print_words(train_w[n])
     prob, attentions = dmn.predict([train_raw[n]])
-    print '...Confidence: {}'.format(prob.max())
-    print attentions
+    print 'Predict: ', prob.argmax(), '...Confidence: ',prob.max()
+    ax.imshow(attentions,cmap = 'Blues',interpolation='none')
+    plt.title('Train. ')
+    fig.show()
+    input_str = raw_input("Press ENTER to continue. Type exit to stop: ")
     
     print "==> Test/dev sample"
-    n = random.randint(0,len(unseen_raw)-1)
+    #n = random.randint(0,len(unseen_raw)-1)
     print_words(unseen_w[n])
     prob, attentions = dmn.predict([unseen_raw[n]])
-    print '...Confidence: {}'.format(prob.max())
-    print attentions
-    
+    print 'Predict: ', prob.argmax(), '...Confidence: ',prob.max()
+    ax.imshow(attentions,cmap = 'Blues',interpolation='none')
+    plt.title('Test. ')
+    fig.show()
     input_str = raw_input("Press ENTER to continue. Type exit to stop: ")
